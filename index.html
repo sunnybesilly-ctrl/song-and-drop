@@ -814,7 +814,15 @@ html, body { margin: 0; padding: 0; width: 100%; height: 100% !important; overfl
 #shotCredit {flex:1; min-width:0; overflow-wrap:anywhere;}
 #shotClock {flex:none; color:#fff587; font-variant-numeric:tabular-nums;}
 </style>
-</head>
+<style>
+.ticker-section {align-items:flex-start;}
+.ticker-section .ticker-fade {display:none;}
+#tickerWrapper {flex-direction:column;width:100%;padding:0;gap:20px;position:relative;}
+#tickerWrapper.is-static {align-self:center;}
+#tickerWrapper .song-card {width:100%;min-width:0;max-width:none;box-sizing:border-box;}
+#tickerWrapper .thumbnail {width:30%;height:auto;aspect-ratio:16/9;}
+@keyframes queueUp {from{transform:translate3d(0,0,0)}to{transform:translate3d(0,var(--tp),0)}}
+</style></head>
 <!-- KEEP SCREEN AWAKE: paste this right before </body> in BOTH music display files -->
 <video id="keepAwake" muted loop autoplay playsinline webkit-playsinline preload="auto" width="2" height="2" style="position:fixed;right:0;bottom:0;width:2px;height:2px;opacity:.02;pointer-events:none;z-index:-1">
 <source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAANMbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAB9AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAnZ0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAB9AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAEAAAABAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAfQAAAAAAABAAAAAAHubWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAoAAAAUABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABmW1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAVlzdGJsAAAAuXN0c2QAAAAAAAAAAQAAAKlhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAQABIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAAL2F2Y0MBQsAe/+EAF2dCwB7ZBCbARAAAAwAEAAADACg8WLkgAQAFaMuDyyAAAAAQcGFzcAAAAAEAAAABAAAAFGJ0cnQAAAAAAAALpAAAC6QAAAAYc3R0cwAAAAAAAAABAAAACgAACAAAAAAUc3RzcwAAAAAAAAABAAAAAQAAABxzdHNjAAAAAAAAAAEAAAABAAAACgAAAAEAAAA8c3RzegAAAAAAAAAAAAAACgAAAo4AAAAKAAAACwAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAUc3RjbwAAAAAAAAABAAADfAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNjAuMTYuMTAwAAAACGZyZWUAAALxbWRhdAAAAm8GBf//a9xF6b3m2Ui3lizYINkj7u94MjY0IC0gY29yZSAxNjQgcjMxMDggMzFlMTlmOSAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMjMgLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0wIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDE6MHgxMTEgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTAgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MCB3ZWlnaHRwPTAga2V5aW50PTEwIGtleWludF9taW49MSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTEwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABdliIQEfJigADXzJycnXXXXXXXXXXXXgAAAAAZBmjgI+EYAAAAHQZpUAj4RgAAAAAZBmmAR8IwAAAAGQZqAEfCMAAAABkGaoBHwjAAAAAZBmsAR8IwAAAAGQZrgEfCMAAAABkGbABDwjAAAAAZBmyA/wjA=" type="video/mp4">
@@ -1238,6 +1246,12 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
         // A valid YouTube video ID is exactly 11 chars: letters, digits, - and _
         if (v && /^[a-zA-Z0-9_-]{11}$/.test(v)) return v;
       }
+      const videoLink = /^https?:\/\/(?:(?:www\.)?youtu\.be\/|(?:(?:www|music|m)\.)?youtube\.com\/(?:watch\?(?:[^#\s]*&)?v=|shorts\/|embed\/|live\/))([\w-]{11})(?:[?&#/]|$)/i;
+      for (const value of Object.values(song)) {
+        if (typeof value !== "string") continue;
+        const match = videoLink.exec(value.trim());
+        if (match) return match[1];
+      }
       return '';
     }
 
@@ -1332,7 +1346,7 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
         const tr = getComputedStyle(el).transform;
         if (!tr || tr === "none") return 0;
         const v  = tr.slice(tr.indexOf("(") + 1, tr.lastIndexOf(")")).split(",").map(parseFloat);
-        const tx = tr.indexOf("matrix3d") === 0 ? v[12] : v[4];
+        const tx = tr.indexOf("matrix3d") === 0 ? v[13] : v[5];
         return isFinite(tx) ? -tx : 0;
       } catch (e) { return 0; }
     }
@@ -1376,17 +1390,17 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
       // Exact length of one set = distance from card #1 to its twin.
       const first = wrapper.querySelector(".song-card");
       const twin  = wrapper.querySelector(".ticker-dupe .song-card");
-      const period = (first && twin) ? (twin.offsetLeft - first.offsetLeft) : 0;
+      const period = (first && twin) ? (twin.offsetTop - first.offsetTop) : 0;
       if (!(period > 0)) { wrapper.style.animation = ""; return; }
       _tickerPeriod = period;
 
-      const pxs   = Math.min(TICKER_MAX_PXS, Math.max(TICKER_MIN_PXS, period / TICKER_LOOP_SECONDS));
+      const pxs   = Math.min(TICKER_MAX_PXS, Math.max(TICKER_MIN_PXS, period / TICKER_LOOP_SECONDS)) / 3;
       const dur   = period / pxs;
       const startPx = ((keepPx % period) + period) % period;
       wrapper.style.setProperty("--tp", (-period) + "px");
       wrapper.style.animation = "none";
       void wrapper.offsetWidth;            // restart animation cleanly
-      wrapper.style.animation = "scroll " + dur.toFixed(2) + "s linear " + (-(startPx / pxs)).toFixed(2) + "s infinite";
+      wrapper.style.animation = "queueUp " + dur.toFixed(2) + "s linear " + (-(startPx / pxs)).toFixed(2) + "s infinite";
     }
 
     // ----------------------------------------------------------
