@@ -37,9 +37,55 @@ function draw(){
  byId('edge').setAttribute('points',points.map(p=>p.join(',')).join(' '));
  const left=Math.max(a[0],d[0],e[0])+0.6,right=Math.min(b[0],c[0])-0.6;
  const top=Math.max(b[1],e[1])+0.6,bottom=Math.min(c[1],d[1])-0.6;
- const frame=byId('show');const width=(right-left)*innerWidth/100,height=(bottom-top)*innerHeight/100;
- const scale=Math.min(width/1280,height/720);
- Object.assign(frame.style,{left:left+'%',top:top+'%',width:width/scale+'px',height:height/scale+'px',transformOrigin:'0 0',transform:'scale('+scale+')',pointerEvents:editing?'none':'auto'});
+ const frame=byId('show');
+ const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]);
+ const x0=Math.min(...xs),x1=Math.max(...xs),y0=Math.min(...ys),y1=Math.max(...ys);
+ const unit=(x1-x0)*innerWidth/100/1920;
+ const height=(y1-y0)*innerHeight/100/unit;
+ Object.assign(frame.style,{left:x0+'%',top:y0+'%',width:'1920px',height:height+'px',transformOrigin:'0 0',transform:'scale('+unit+')',pointerEvents:editing?'none':'auto',background:'transparent'});
+ const doc=frame.contentDocument;
+ if(doc && doc.getElementById('stage')){
+  let style=doc.getElementById('vault-fit');
+  if(!style){
+   style=doc.createElement('style');style.id='vault-fit';doc.head.appendChild(style);
+   style.textContent=`
+   html,body,#stage{background:transparent!important}
+   #stage{width:100%!important;height:100%!important;transform:none!important}
+   #stage>.container{position:absolute!important;inset:0!important;transform:none!important;width:100%!important;height:100%!important;padding:0!important}
+   #stage .main-content,#stage .left-panel{display:contents!important}
+   .jukebox-hem,.paint-bg{display:none!important}
+   #stage .header,#stage .ticker-section,#stage .qr-footer,#stage #chatSection{position:absolute!important;box-sizing:border-box;margin:0!important;overflow:hidden}
+   #stage .header{padding:8px;gap:4px;flex-direction:column;justify-content:center}
+   #stage .header-date,#stage .header-right{position:static!important;transform:none!important}
+   #stage .header-date{font-size:24px}#stage .header .title{font-size:58px}
+   #stage .header .header-right{display:flex;justify-content:center}
+   #stage .qr-howto{font-size:22px;letter-spacing:0}
+   #stage .qr-row{flex:1;min-height:0;align-items:center}
+   #stage .qr-code{width:var(--qr)!important;height:var(--qr)!important}
+   `;
+  }
+  // Use each column's own ceiling height along the calibrated slope.
+  const lx=Math.max(a[0],e[0],d[0])+0.45,rx=Math.min(b[0],c[0])-0.45;
+  const mid=lx+(rx-lx)*0.56;
+  const roof=x=>a[1]+(b[1]-a[1])*(x-a[0])/(b[0]-a[0]);
+  const floor=Math.min(c[1],d[1])-0.55;
+  const topLeft=roof(mid)+0.6, topRight=roof(rx)+0.6;
+  const qrTop=floor-(floor-topLeft)*0.46;
+  function box(selector,l,t,r,bottom){
+   const el=doc.querySelector(selector);
+   const values={left:(l-x0)*innerWidth/100/unit,top:(t-y0)*innerHeight/100/unit,width:(r-l)*innerWidth/100/unit,height:(bottom-t)*innerHeight/100/unit};
+   for(const k in values)el.style.setProperty(k,values[k]+'px','important');
+  }
+  // A narrower marquee can climb higher into the vault than a full-width header.
+  const headEnd=lx+(mid-lx)*0.65;
+  const headTop=roof(headEnd)+0.5;
+  const songTop=Math.max(topLeft,(headTop+qrTop)/2);
+  box('.header',lx,headTop,headEnd,songTop);
+  box('.ticker-section',lx,songTop,mid,qrTop);
+  box('.qr-footer',lx,qrTop,mid,floor);
+  box('#chatSection',mid+0.25,topRight,rx,floor);
+  doc.documentElement.style.setProperty('--qr',Math.max(55,Math.min((mid-lx)*innerWidth/100/unit/5.1,(floor-qrTop)*innerHeight/100/unit-175))+'px');
+ }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
  byId('panel').hidden=byId('handles').hidden=!editing;byId('edit').hidden=editing;
  byId('label').textContent=(selected+1)+' / 5 · '+names[selected];
@@ -54,5 +100,5 @@ document.querySelectorAll('[data-x],[data-y]').forEach(el=>el.onclick=()=>move(p
 byId('done').onclick=()=>{try{localStorage.setItem(key,JSON.stringify(points))}catch{}editing=false;draw()};
 byId('edit').onclick=()=>{editing=true;draw()};
 byId('full').onclick=()=>{const el=document.documentElement;const fn=el.requestFullscreen||el.webkitRequestFullscreen;if(fn)fn.call(el)};
-window.addEventListener('resize',draw);draw();
+byId('show').addEventListener('load',draw);window.addEventListener('resize',draw);draw();
 </script></html>
