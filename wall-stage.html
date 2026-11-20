@@ -4,10 +4,10 @@
 <style>
 *{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:black;color:#fff;font:16px system-ui,sans-serif}
 #wall,#art,#handles{position:absolute;inset:0;width:100%;height:100%}#wall{visibility:hidden;background:#09251d;overflow:hidden}
-iframe{position:absolute;border:0;background:#09251d}
+#art{z-index:2;pointer-events:none}iframe{position:absolute;border:0;background:#09251d}
 #panel{position:absolute;left:50%;top:52%;transform:translate(-50%,-50%);padding:14px;border:1px solid #b4f099;background:#0b211af5;border-radius:12px;text-align:center;max-width:94vw;width:max-content}button{font:inherit;padding:7px 10px;margin:3px;color:inherit;background:#234e3d;border:1px solid #729782;border-radius:6px}#handles{pointer-events:none}.pin{pointer-events:auto;position:absolute;transform:translate(-50%,-50%);margin:0;touch-action:none;background:#173525;border:2px solid white;border-radius:50%}.pin.active{background:#fff097;color:#07170f}#edit{position:absolute;opacity:0}#edit:focus{opacity:1}[hidden]{display:none!important}small{display:block;margin:5px}
 </style>
-<div id="wall"><svg id="art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="grooves" width="100" height="100" patternUnits="userSpaceOnUse"><g id="rings" fill="none" stroke="#39775b" stroke-width=".22"></g></pattern></defs><polygon id="edge" fill="url(#grooves)" stroke="#e9df94" stroke-width=".65"/></svg><iframe id="show" title="Song Display Main + Drop Your Shot" allow="autoplay"></iframe></div>
+<div id="wall"><svg id="art" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><defs><pattern id="grooves" width="100" height="100" patternUnits="userSpaceOnUse"><g id="rings" fill="none" stroke="#39775b" stroke-width=".22"></g></pattern></defs><polygon id="edge" fill="none" stroke="#68ffa6" stroke-width="13" vector-effect="non-scaling-stroke" stroke-linejoin="round"/><polygon id="tubeGap" fill="none" stroke="#073221" stroke-width="8" vector-effect="non-scaling-stroke"/><polygon id="tubeCore" fill="none" stroke="#ffdf68" stroke-width="4" vector-effect="non-scaling-stroke"/></svg><iframe id="show" title="Song Display Main + Drop Your Shot" allow="autoplay"></iframe></div>
 <button id="edit" aria-label="Adjust wall outline">Adjust wall</button><div id="handles"></div>
 <section id="panel"><strong id="label"></strong><small>Drag the points or nudge the selected point.</small><button id="prev">Previous</button><button id="next">Next</button><br><button data-x="-1">←</button><button data-y="-1">↑</button><button data-y="1">↓</button><button data-x="1">→</button><br><button id="full">Full screen</button><button id="done">Save &amp; show</button></section>
 <script>
@@ -34,7 +34,7 @@ function draw(){
  const [a,b,c,d,e]=points;
  const outline=points.map(p=>p[0]+'% '+p[1]+'%').join(',');
  const wall=byId('wall');wall.style.clipPath=wall.style.webkitClipPath='polygon('+outline+')';wall.style.visibility='visible';
- byId('edge').setAttribute('points',points.map(p=>p.join(',')).join(' '));
+ ['edge','tubeGap','tubeCore'].forEach(id=>byId(id).setAttribute('points',points.map(p=>p.join(',')).join(' ')));
  const left=Math.max(a[0],d[0],e[0])+0.6,right=Math.min(b[0],c[0])-0.6;
  const top=Math.max(b[1],e[1])+0.6,bottom=Math.min(c[1],d[1])-0.6;
  const frame=byId('show');
@@ -89,6 +89,17 @@ function draw(){
    #stage #tickerWrapper .card-artist,#stage #tickerWrapper .card-requester{font:650 calc(var(--song-title)*.59)/1.12 system-ui;white-space:normal;overflow-wrap:anywhere}
    #stage #tickerWrapper .card-requester{color:#ffe77e!important;order:2}
    #stage #tickerWrapper .card-requester::before{content:'Requested by '}
+   #stage #tickerWrapper .song-card{border:3px solid var(--card-accent,#ffe37c)!important;border-left-width:9px!important;background:linear-gradient(110deg,#204b37,#111f25 80%);box-shadow:inset 0 0 16px #aaffce22!important}
+   #stage .qr-section{max-width:none!important;width:100%;height:100%;overflow:hidden;justify-self:stretch;border-radius:14px;border:2px solid var(--c,#ffe477);background:#113326;animation:pairIn .4s ease-out}
+   @keyframes pairIn{from{opacity:.2}to{opacity:1}}
+   #stage .qr-row{box-sizing:border-box;padding:6px 10px 10px;gap:12px;grid-template-rows:minmax(0,1fr)}
+   #stage .qr-wrap img{display:none!important}
+   #stage .qr-wall-label{display:flex;align-items:center;justify-content:center;gap:8px;white-space:nowrap;font-size:var(--label-size,30px);line-height:1.15}
+   #stage .qr-wall-label svg{width:1em;height:1em}
+   #stage .q-tip .qr-wall-label{color:#67ff97}#stage .q-snap .qr-wall-label{color:#ffed52}
+   #stage .header{padding:4px 8px;gap:8px;white-space:nowrap}
+   #stage .header .title{font-size:var(--head-size,52px);line-height:1}
+   #stage .header-right .ts-num{font-size:var(--head-size,52px)}
    `;
    doc.head.appendChild(css);
    doc.querySelector('.qr-howto').textContent='Point your phone camera at a code. Tap the link.';
@@ -102,13 +113,32 @@ function draw(){
    doc.querySelectorAll('.qr-section').forEach((section,i)=>{
     const rows=codes[i],size=rows.length+8;
     const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>bit==='1'?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'')).join('');
-    section.querySelector('a').innerHTML='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" shape-rendering="crispEdges" role="img" aria-label="'+labels[i]+'"><rect width="100%" height="100%" fill="white"/><path fill="black" d="'+path+'"/></svg>';
-    const label=doc.createElement('span');label.className='qr-wall-label';label.textContent=labels[i];section.appendChild(label);
+    section.querySelector('a').insertAdjacentHTML('beforeend','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" shape-rendering="crispEdges" role="img" aria-label="'+labels[i]+'"><rect width="100%" height="100%" fill="white"/><path fill="black" d="'+path+'"/></svg>');
+    const label=doc.createElement('span');label.className='qr-wall-label';label.textContent=labels[i];if(i>=2){const glyph=["M23.59 3.475a5.1 5.1 0 00-3.05-3.05c-1.31-.42-2.5-.42-4.92-.42H8.36c-2.4 0-3.61 0-4.9.4a5.1 5.1 0 00-3.05 3.06C0 4.765 0 5.965 0 8.365v7.27c0 2.41 0 3.6.4 4.9a5.1 5.1 0 003.05 3.05c1.3.41 2.5.41 4.9.41h7.28c2.41 0 3.61 0 4.9-.4a5.1 5.1 0 003.06-3.06c.41-1.3.41-2.5.41-4.9v-7.25c0-2.41 0-3.61-.41-4.91zm-6.17 4.63l-.93.93a.5.5 0 01-.67.01 5 5 0 00-3.22-1.18c-.97 0-1.94.32-1.94 1.21 0 .9 1.04 1.2 2.24 1.65 2.1.7 3.84 1.58 3.84 3.64 0 2.24-1.74 3.78-4.58 3.95l-.26 1.2a.49.49 0 01-.48.39H9.63l-.09-.01a.5.5 0 01-.38-.59l.28-1.27a6.54 6.54 0 01-2.88-1.57v-.01a.48.48 0 010-.68l1-.97a.49.49 0 01.67 0c.91.86 2.13 1.34 3.39 1.32 1.3 0 2.17-.55 2.17-1.42 0-.87-.88-1.1-2.54-1.72-1.76-.63-3.43-1.52-3.43-3.6 0-2.42 2.01-3.6 4.39-3.71l.25-1.23a.48.48 0 01.48-.38h1.78l.1.01c.26.06.43.31.37.57l-.27 1.37c.9.3 1.75.77 2.48 1.39l.02.02c.19.2.19.5 0 .68z","M12.206.793c.99 0 4.347.276 5.93 3.821.529 1.193.403 3.219.299 4.847l-.003.06c-.012.18-.022.345-.03.51.075.045.203.09.401.09.3-.016.659-.12 1.033-.301.165-.088.344-.104.464-.104.182 0 .359.029.509.09.45.149.734.479.734.838.015.449-.39.839-1.213 1.168-.089.029-.209.075-.344.119-.45.135-1.139.36-1.333.81-.09.224-.061.524.12.868l.015.015c.06.136 1.526 3.475 4.791 4.014.255.044.435.27.42.509 0 .075-.015.149-.045.225-.24.569-1.273.988-3.146 1.271-.059.091-.12.375-.164.57-.029.179-.074.36-.134.553-.076.271-.27.405-.555.405h-.03c-.135 0-.313-.031-.538-.074-.36-.075-.765-.135-1.273-.135-.3 0-.599.015-.913.074-.6.104-1.123.464-1.723.884-.853.599-1.826 1.288-3.294 1.288-.06 0-.119-.015-.18-.015h-.149c-1.468 0-2.427-.675-3.279-1.288-.599-.42-1.107-.779-1.707-.884-.314-.045-.629-.074-.928-.074-.54 0-.958.089-1.272.149-.211.043-.391.074-.54.074-.374 0-.523-.224-.583-.42-.061-.192-.09-.389-.135-.567-.046-.181-.105-.494-.166-.57-1.918-.222-2.95-.642-3.189-1.226-.031-.063-.052-.15-.055-.225-.015-.243.165-.465.42-.509 3.264-.54 4.73-3.879 4.791-4.02l.016-.029c.18-.345.224-.645.119-.869-.195-.434-.884-.658-1.332-.809-.121-.029-.24-.074-.346-.119-1.107-.435-1.257-.93-1.197-1.273.09-.479.674-.793 1.168-.793.146 0 .27.029.383.074.42.194.789.3 1.104.3.234 0 .384-.06.465-.105l-.046-.569c-.098-1.626-.225-3.651.307-4.837C7.392 1.077 10.739.807 11.727.807l.419-.015h.06z"][i-2];label.insertAdjacentHTML('afterbegin','<svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="'+glyph+'"/></svg>')}section.appendChild(label);
    });
+  }
+  if(!doc.documentElement.dataset.wallQueue){
+   doc.documentElement.dataset.wallQueue='1';
+   const win=doc.defaultView,wrapper=doc.getElementById('tickerWrapper');
+   const cacheKey='wall-queue-'+new Date().toLocaleDateString('en-CA');
+   function refreshCards(){
+    wrapper.querySelectorAll('.song-card:not([data-wall-color])').forEach(card=>{card.dataset.wallColor='1';card.style.setProperty('--card-accent',card.style.borderColor||'#ffdf68')});
+    if(win.allSongs && win.allSongs.length && wrapper.querySelector('.song-card')){
+     try{localStorage.setItem(cacheKey,JSON.stringify(win.allSongs))}catch{}
+    }
+   }
+   new MutationObserver(refreshCards).observe(wrapper,{childList:true});refreshCards();
+   win.setTimeout(()=>{
+    const empty=wrapper.querySelector('.empty-state');
+    if(!empty||!empty.textContent.includes('Loading'))return;
+    try{const rows=JSON.parse(localStorage.getItem(cacheKey));if(Array.isArray(rows)&&rows.length&&typeof win.displayQueue==='function'){win.allSongs=rows;win.displayQueue();doc.getElementById('totalCount').textContent=rows.length;return}}catch{}
+    empty.textContent='Connecting to the song queue…';
+    if(typeof win.fetchSongQueue==='function')win.fetchSongQueue();
+   },8000);
   }
   const pxX=x=>(x-x0)*innerWidth/100/unit,pxY=y=>(y-y0)*innerHeight/100/unit;
   const L=Math.max(...[a,d,e].map(p=>pxX(p[0])))+9,R=Math.min(pxX(b[0]),pxX(c[0]))-9;
-  const base=Math.min(pxY(d[1]),pxY(c[1]))-8;
+  const base=Math.min(pxY(d[1]),pxY(c[1]))-22;
   const span=R-L;
   const usableHeight=base-pxY(b[1]);
   const mediaWidth=Math.min(span*0.43,Math.max(span*0.35,usableHeight*0.78));
@@ -119,7 +149,7 @@ function draw(){
   const footerTop=base-footerH;
   const queueW=split-L;
   const headerW=queueW*0.77;
-  const headerTop=Math.max(roof(L),roof(L+headerW))+8;
+  const headerTop=Math.max(roof(L),roof(L+headerW))+24;
   const headerH=Math.min(110,(footerTop-headerTop)*0.2);
   const queueTop=Math.max(leftRoof,headerTop+headerH);
   const queueH=footerTop-queueTop;
@@ -137,7 +167,9 @@ function draw(){
   box('.ticker-section',L,queueTop,queueW,queueH);
   box('#chatSection',split+5,rightRoof,R-split-5,base-rightRoof);
   box('.qr-footer',L,footerTop,split-L,footerH);
-  doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-108,(split-L)/2-16)))+'px');
+  vars.setProperty('--head-size',Math.min(headerW*.071,headerH*.54)+'px');
+  vars.setProperty('--label-size',Math.min(34,footerH*.11)+'px');
+  doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-doc.querySelector(".qr-howto").offsetHeight-Math.min(34,footerH*.11)*1.15-37,(split-L)/2-42)))+'px');
  }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
  byId('panel').hidden=byId('handles').hidden=!editing;byId('edit').hidden=editing;
