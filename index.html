@@ -2556,7 +2556,9 @@ function pendingUploads(items) {
 const login = document.getElementById("shotLogin");
 const status = login.querySelector('[role="status"]');
 const reelStatus = document.getElementById("reelStatus");
-let nextRound = performance.timeOrigin + 60000;
+const roundIntervalMs = 30000;
+const roundSize = 15;
+let nextRound = performance.timeOrigin + roundIntervalMs;
 let lastIssue = "";
 let retryAt = 0;
 let pairedUid = localStorage.getItem('pairedProjectorUid');
@@ -2604,7 +2606,7 @@ function clockText(seconds) {
   return Math.floor(whole / 60) + ":" + String(whole % 60).padStart(2, "0");
 }
 function brightenPhoto(image) {
-  let gain = 1.08;
+  let gain = 1.12;
   try {
     const sample = document.createElement("canvas");
     sample.width = sample.height = 16;
@@ -2615,7 +2617,7 @@ function brightenPhoto(image) {
     for (let i = 0; i < pixels.length; i += 4) {
       luminance += 0.2126*pixels[i] + 0.7152*pixels[i+1] + 0.0722*pixels[i+2];
     }
-    gain = Math.min(1.28, Math.max(1, 115 / Math.max(1, luminance / 256)));
+    gain = Math.min(1.35, Math.max(1, 125 / Math.max(1, luminance / 256)));
   } catch { /* Some photo hosts permit display but block pixel sampling. */ }
   if (gain > 1) image.style.filter = "brightness(" + gain + ")";
 }
@@ -2769,13 +2771,13 @@ async function rotate() {
         }
       } catch (error) { console.warn("Drop Your Shot media unavailable", error); }
       panel.hidden = true;
-      if (shown.size === 11) break;
+      if (shown.size === roundSize) break;
     }
     if (shown.size) {
-      nextRound = started + 60000;
+      nextRound = started + roundIntervalMs;
     } else lastIssue = (playbackIssue || "Media files could not play") + " · retrying";
   } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
-  finally { panel.hidden = true; rotating = false; retryAt = Date.now() + 10000; if(lastIssue) reelStatus.textContent=lastIssue; }
+  finally { panel.hidden = true; rotating = false; retryAt = lastIssue ? Date.now() + 10000 : 0; if(lastIssue) reelStatus.textContent=lastIssue; }
 }
 setInterval(tick, 1000);
 </script>
