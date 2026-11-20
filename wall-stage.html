@@ -98,7 +98,7 @@ function draw(){
    #stage .ticker-section{padding:0 8px 0 0}
    #stage #tickerWrapper .song-card{min-height:var(--song-height);height:auto;position:relative;padding:18px 24px;gap:22px;background:#09241b;box-shadow:none!important;border:2px solid #64826d!important;border-left:8px solid #f8df75!important;border-radius:18px;transform:none!important}
    #stage #tickerWrapper .thumbnail{width:26%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:8px;box-shadow:none}
-   #stage #tickerWrapper .card-num{width:12%;align-self:center;background:transparent!important;color:#ffe77e;overflow:visible}
+   #stage #tickerWrapper .card-num{width:12%;align-self:center;color:#ffe77e;overflow:visible}
    #stage #tickerWrapper .cn-val{font:850 calc(var(--song-title)*1.45)/1 system-ui;font-variant-numeric:tabular-nums;letter-spacing:-.055em}
    #stage #tickerWrapper .cn-3 .cn-val{font-size:var(--song-title)}
    #stage #tickerWrapper .cn-4 .cn-val{font-size:calc(var(--song-title)*.78)}
@@ -168,16 +168,24 @@ function draw(){
    #stage .wall-count .total-stat{padding:2px 6px}
    #stage .header .title{line-height:1;text-shadow:0 0 5px #ffdd6655}
    #stage #tickerWrapper .card-hype{display:none!important}
-   #stage #tickerWrapper .card-num{background:#ffe477!important;color:#09241b!important;border-radius:.35em;text-shadow:none;text-align:center;padding:.12em;box-sizing:border-box;width:auto;min-width:2em;font-weight:900}
+   #stage #tickerWrapper .card-num{color:#09241b!important;border-radius:.35em;text-shadow:none;text-align:center;padding:.12em;box-sizing:border-box;width:auto;min-width:2em;font-weight:900}
    #stage .qr-row{grid-template-columns:minmax(0,1fr);padding:3px}
    #stage .qr-howto,#stage .wall-host,#stage .ts-num{font-family:"Arial Rounded MT Bold",ui-rounded,"Trebuchet MS",sans-serif;font-weight:1000;letter-spacing:-.035em}
    #stage .qr-howto:after{content:' ↓';display:inline-block;animation:wallArrow 1.6s ease-in-out infinite}
    @keyframes wallArrow{0%,100%{opacity:0;transform:translateY(-.12em)}50%,75%{opacity:1;transform:translateY(.08em)}}
    @media(prefers-reduced-motion:reduce){#stage .qr-howto:after{animation:none}}
    #stage .wall-count .ts-label{font-size:calc(var(--count-size)*.42)}
+   #stage .wall-host svg{display:block;height:100%;max-width:100%;width:auto}
+   #stage .qr-howto{display:flex;align-items:center;justify-content:center;gap:.25em;background:#123828;color:#ffe777}
+   #stage .qr-howto svg{height:1em;width:auto;max-width:78%}
+   #stage .wall-info{position:absolute;box-sizing:border-box;display:flex;flex-direction:column;align-items:flex-start;justify-content:center;gap:.06em;padding:0 .16em;overflow:hidden}
+   #stage .wall-info .wall-host,#stage .wall-info .wall-byline,#stage .wall-info .wall-count{position:static!important;transform:none!important;margin:0!important}
+   #stage .wall-info .wall-host{height:1.13em}
+   #stage .wall-info .wall-byline{font-size:.58em}
+   #stage .wall-info .wall-count{margin-top:.07em!important}
    `;
    doc.head.appendChild(css);
-   doc.querySelector('.qr-howto').textContent='wanna??';
+   doc.querySelector('.qr-howto').innerHTML='<svg aria-label="wanna??" role="img" viewBox="-2 -1 170 30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="scanGloss" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fff"/><stop offset=".18" stop-color="#ffdc53"/><stop offset=".45" stop-color="#fffbd9"/><stop offset=".58" stop-color="#ffdc53"/><stop offset="1" stop-color="#b57803"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.8" stroke="url(#scanGloss)"><path transform="translate(0 0)" d="M3 8L6 22L11 13L16 22L20 8"/><path transform="translate(24 0)" d="M17 10C2 3 0 27 13 21Q16 20 17 12V22"/><path transform="translate(48 0)" d="M4 22V9M4 16C7 4 18 5 18 15V22"/><path transform="translate(72 0)" d="M4 22V9M4 16C7 4 18 5 18 15V22"/><path transform="translate(96 0)" d="M17 10C2 3 0 27 13 21Q16 20 17 12V22"/><path transform="translate(120 0)" d="M4 8C6 0 23 3 16 12L11 16M11 22v.1"/><path transform="translate(144 0)" d="M4 8C6 0 23 3 16 12L11 16M11 22v.1"/></g></svg>';
    const sections=Array.from(doc.querySelectorAll('.qr-section'));
    let active=0;
    function showCode(){sections.forEach((section,i)=>{section.hidden=i!==active})}
@@ -186,8 +194,8 @@ function draw(){
    const byline=doc.createElement('div');byline.className='wall-byline';
    const count=doc.querySelector('.header-right');
    count.classList.add('wall-count');doc.querySelector('#stage>.container').appendChild(count);
-   const host=doc.createElement('strong');host.textContent='DJ Sunny';
-   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);byline.append(doc.getElementById('headerDate'),doc.querySelector('.title-sub'));doc.querySelector('#stage>.container').appendChild(byline);
+   const host=doc.createElement('strong');host.innerHTML='<svg aria-label="DJ SUNNY" role="img" viewBox="-2 -1 179 30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="hostGloss" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fff"/><stop offset=".18" stop-color="#8dffb4"/><stop offset=".45" stop-color="#fffbd9"/><stop offset=".58" stop-color="#8dffb4"/><stop offset="1" stop-color="#179c60"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.8" stroke="url(#hostGloss)"><path transform="translate(0 0)" d="M5 22V5C22 3 23 23 5 22Z"/><path transform="translate(24 0)" d="M17 5V16Q17 27 5 20"/><path transform="translate(57 0)" d="M18 6C5 0 0 12 12 14S21 26 4 21"/><path transform="translate(81 0)" d="M4 5V15C4 26 18 26 18 15V5"/><path transform="translate(105 0)" d="M4 22V5L18 22V5"/><path transform="translate(129 0)" d="M4 22V5L18 22V5"/><path transform="translate(153 0)" d="M4 5L11 14L18 5M11 14V22"/></g></svg>';
+   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);byline.append(doc.getElementById('headerDate'),doc.querySelector('.title-sub'));const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);info.append(host,byline,count);
    const labels=['Request a song','Party chat','Tip the DJ','Snapchat'];
    const codes=[["1111111000100001111010010010101111111","1000001001010110101101101101101000001","1011101010011101000111000010001011101","1011101010110000110100001111101011101","1011101010000001101110010000101011101","1000001010001010001001101011101000001","1111111010101010101010101010101111111","0000000010001010100111111001100000000","1011111001111100001110100011101111100","0110010100001001110000010110111100010","0111111010011110010010101001101110011","0101010011000100100001001011110100001","1111111111110100111000110111011111111","0000110101000110111100010100110100010","1110001101001001110001101111010111011","1010110101011011111101000010010110011","1011111101100010100001001111011010111","0011010001101111011011010100110100010","0011101111010101110100101011111010011","0111110001000111000111110001111111001","1010001010000011010100110111011011100","0010000011111000000110010000100001000","0001011001111101101010100111101111011","0100110100111000100010011001000110011","0001011000011101001011101110111010111","1010110000110111100000011100100100100","1001001001111000011011000011110110111","1011000100001110100001100001000110011","1001011100100000010010111111111110111","0000000011011000111111110110100011010","1111111000101111010001000110101010111","1000001010010110111001100010100011011","1011101010110100100101011111111110101","1011101011111111011011110111111011001","1011101011011011110101101000100000111","1000001000101011000111011010111010001","1111111010110011010100101100011011111"],["1111111001111000101100111110001111111","1000001010111000101100101100101000001","1011101010110001000111000010101011101","1011101010110001110111111101001011101","1011101001000010001110010000101011101","1000001000001100101001101110101000001","1111111010101010101010101010101111111","0000000010110001100111011000100000000","1000001011110001001111101111111001110","1011100011011010010011110110010111110","0100011100001100010010100001001000011","0010010001010011100000000010110101001","1011011000101010001110000001101001001","1110110001000001111100010101110101010","1101001101101001110001001111000111011","0010110101000010011110000001111101111","1101111101110000100001001111111110111","1000100100100010011010110111111101010","0111111011000011000010011101001100101","0010010100110100000110100000011000001","0101001000110001010100100111011011100","0001000101111001100101110011000010100","0011001111001001101010100101110111011","1001110110010001100011011000010111011","0000111101111001111101010000101000001","1001100001100010100001010101100101100","1000111001100000011011001011010100111","1011110110110001000010001010100011110","1011111011001110010010111110111110101","0000000011001111111110110111100010010","1111111000000101100111110100101010001","1000001000111001111000100011100010011","1011101001000010100101011101111110101","1011101001110110111000010110011000101","1011101001000001110101101000100001011","1000001000111100000110010010101011001","1111111010100001100010001010100101001"],["11111110110000011101101111111","10000010100110110100101000001","10111010010101110010101011101","10111010100000001001001011101","10111010000101000101001011101","10000010000110100001001000001","11111110101010101010101111111","00000000110101100111000000000","10110111001001101110001001011","10010100100000011001111010001","11010010011100110110011100110","11101001000101110011100010001","11101011100000001100100001100","11101101011001000101001000111","01100011101100100101101110111","00110100111111010011000010010","11011010110000000010010011010","01101100000101000001110101110","10000111001000000010010110100","00111100110010011110000100100","01000110111001010111111111100","00000000100001110010100011111","11111110110001001111101011010","10000010110010001001100011011","10111010011100110100111110101","10111010110110101101010111010","10111010101001011010110100101","10000010001011101000110101010","11111110110111010100100100010"],["11111110101000111110001111111","10000010001101000101001000001","10111010011010010111001011101","10111010101000001010001011101","10111010101100111110001011101","10000010101100001001101000001","11111110101010101010101111111","00000000101001011111100000000","10001011100001000110111111001","01101100110111111110111111111","01101010100000011010011110001","10010000011010110110100011011","10000011110001101101010000010","11111101101000011010001011111","11111011101101110100100011101","01010000001111011110010000011","00000010100111010101110100010","10001100110011111010001111011","00111011101110011110011010101","00100001000000110100001000011","11100010001101101100111111001","00000000110010011011100010001","11111110100101110111101011101","10000010000101011101100010001","10111010101101000111111111010","10111010011100111110010100001","10111010010001110010000001111","10000010000001110110111011011","11111110100110100100100110010"]];
    doc.querySelectorAll('.qr-section').forEach((section,i)=>{
@@ -245,13 +253,17 @@ function draw(){
   const headerW=queueW*.47;
   const titleTop=footerTop;
   const titleH=footerH*.17;
-  const dateW=headerW-12;
-  const dateTop=footerTop+footerH*.34;
-  const dateH=footerH*.32;
-  const countX=L+8,countW=dateW,countTop=dateTop+dateH,countH=base-countTop;
+  function leftEdge(y){
+   const edge=y<pxY(e[1])?[a,e]:[e,d];
+   const [u,v]=edge;
+   const t=Math.max(0,Math.min(1,(y-pxY(u[1]))/(pxY(v[1])-pxY(u[1])||1)));
+   return pxX(u[0])+(pxX(v[0])-pxX(u[0]))*t+9;
+  }
+  const infoX=Math.max(leftEdge(footerTop),leftEdge(base),...(pxY(e[1])>footerTop&&pxY(e[1])<base?[pxX(e[0])+9]:[]));
+  const infoW=L+headerW-infoX;
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
-  const cardH=Math.max(80,(queueH-16)/1.35);
+  const cardH=Math.max(80,Math.min((queueH-16)/1.5,queueW*.27));
   const titleSize=Math.max(20,Math.min(queueW*0.060,cardH*0.24,76));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
@@ -261,17 +273,17 @@ function draw(){
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  const hostW=dateW,hostTop=titleTop+titleH,hostH=footerH*.17;
-  box('.wall-host',L+8,hostTop,hostW,hostH);
-  doc.querySelector('.wall-host').style.fontSize=Math.min(hostH*.88,hostW*.17)+'px';
-  box('.wall-count',countX,countTop,countW,countH);
-  vars.setProperty('--count-size',Math.min(countH*.72,countW*.25)+'px');
-  box('.wall-byline',L+8,dateTop,dateW,dateH);
-  const byline=doc.querySelector('.wall-byline');
-  let size=Math.min(dateW*.083,dateH*.32);
-  byline.style.fontSize=size+'px';
-  while(size>8 && (byline.scrollHeight>dateH+1 || byline.scrollWidth>dateW+1)){byline.style.fontSize=(--size)+'px'}
-  box('.header',L,titleTop,headerW,titleH);
+  box('.header',infoX,titleTop,infoW,titleH);
+  const infoH=footerH-titleH;
+  box('.wall-info',infoX,titleTop+titleH,infoW,infoH);
+  const info=doc.querySelector('.wall-info');
+  let size=Math.max(8,Math.min(infoW*.18,infoH*.29));
+  do{
+   info.style.fontSize=size+'px';
+   vars.setProperty('--count-size',size*1.18+'px');
+   if(info.scrollHeight<=infoH+1 && info.scrollWidth<=infoW+1)break;
+   size-=1;
+  }while(size>=8);
   box('.ticker-section',L,queueTop,queueW,queueH);
   box('#chatSection',split+5,rightRoof,R-split-5,base-rightRoof);
   const qrInset=queueW*.48;
