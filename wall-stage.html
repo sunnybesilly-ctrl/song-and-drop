@@ -158,6 +158,12 @@ function draw(){
    #stage .header{justify-content:center;align-items:center;padding:0 8px;border-bottom-width:2px}
    #stage .header>div:first-child{width:100%;align-items:center!important}
    #stage .header .title{font-weight:650!important;letter-spacing:.1em;text-align:center}
+   #stage .qr-howto{white-space:nowrap;text-wrap:nowrap;padding:3px 8px;line-height:1.12;font-weight:800;letter-spacing:0}
+   #stage .qr-footer{display:flex;flex-direction:column}
+   #stage .qr-row{flex:1;min-height:0;height:auto;overflow:hidden}
+   #stage .qr-wall-label{max-height:100%;min-height:0}
+   #stage .qr-wall-label .qr-tag{padding:1px 3px}
+   #stage #tickerWrapper .song-card{padding:14px 18px;gap:18px}
    `;
    doc.head.appendChild(css);
    doc.querySelector('.qr-howto').textContent='📸 Point your phone camera at a code → Tap the link';
@@ -235,8 +241,8 @@ function draw(){
   const titleH=Math.min(headerH,(footerTop-titleTop)*.24);
   const queueTop=Math.max(leftRoof,titleTop+titleH);
   const queueH=footerTop-queueTop;
-  const cardH=Math.max(80,(queueH-32)/2.6);
-  const titleSize=Math.max(20,Math.min(queueW*0.044,cardH*0.22,54));
+  const cardH=Math.max(80,(queueH-16)/1.5);
+  const titleSize=Math.max(20,Math.min(queueW*0.056,cardH*0.22,70));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',titleSize+'px');
@@ -267,9 +273,15 @@ function draw(){
   const qrInset=queueW*.045;
   const qrWidth=queueW-qrInset;
   box('.qr-footer',L+qrInset,footerTop,qrWidth,footerH);
-  vars.setProperty('--prompt-size',Math.min(qrWidth*.043,footerH*.19)+'px');
+  const prompt=doc.querySelector('.qr-howto');
+  let promptSize=Math.min(qrWidth*.033,footerH*.13);
+  vars.setProperty('--prompt-size',promptSize+'px');
+  while(promptSize>8 && prompt.scrollWidth>prompt.clientWidth){
+   vars.setProperty('--prompt-size',(--promptSize)+'px');
+  }
   vars.setProperty('--head-size',Math.min(headerW*.071,titleH*.67)+'px');
-  vars.setProperty('--label-size',Math.min(qrWidth*.04,footerH*.24)+'px');
+  const qrRoom=footerH-prompt.offsetHeight-38;
+  vars.setProperty('--label-size',Math.min(qrWidth*.036,qrRoom/4.1)+'px');
   doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-doc.querySelector(".qr-howto").offsetHeight-38,(qrWidth-32)*.29-25)))+'px');
  }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
