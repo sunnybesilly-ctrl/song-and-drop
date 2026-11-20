@@ -157,13 +157,16 @@ function draw(){
    #stage .wall-count .dot{width:8px;height:8px}
    #stage .header{justify-content:center;align-items:center;padding:0 8px;border-bottom-width:2px}
    #stage .header>div:first-child{width:100%;align-items:center!important}
-   #stage .header .title{font-weight:650!important;letter-spacing:.1em;text-align:center}
+   #stage .header .title{font-weight:450!important;letter-spacing:.075em;text-align:center}
    #stage .qr-howto{white-space:nowrap;text-wrap:nowrap;padding:3px 8px;line-height:1.12;font-weight:800;letter-spacing:0}
    #stage .qr-footer{display:flex;flex-direction:column}
    #stage .qr-row{flex:1;min-height:0;height:auto;overflow:hidden}
    #stage .qr-wall-label{max-height:100%;min-height:0}
    #stage .qr-wall-label .qr-tag{padding:1px 3px}
    #stage #tickerWrapper .song-card{padding:14px 18px;gap:18px}
+   #stage .wall-count{justify-content:flex-start}
+   #stage .wall-count .total-stat{padding:2px 6px}
+   #stage .header .title{line-height:1;text-shadow:0 0 5px #ffdd6655}
    `;
    doc.head.appendChild(css);
    doc.querySelector('.qr-howto').textContent='📸 Point your phone camera at a code → Tap the link';
@@ -233,16 +236,20 @@ function draw(){
   const queueW=split-L;
   const headerW=queueW;
   const headerTop=Math.max(roof(L),roof(L+headerW))+8;
-  const headerH=Math.min(65,(footerTop-headerTop)*0.12);
+  const headerH=Math.min(44,(footerTop-headerTop)*0.085);
   const dateW=queueW*.48;
   const dateTop=Math.max(roof(L),roof(L+dateW))+10;
   const dateH=Math.min(dateW*.19,(footerTop-dateTop)*.19);
-  const titleTop=Math.max(headerTop,dateTop+dateH+4);
+  const countX=L+8;
+  const countW=dateW;
+  const countTop=dateTop+dateH+3;
+  const countH=Math.min(44,queueW*.048);
+  const titleTop=Math.max(headerTop,countTop+countH+5);
   const titleH=Math.min(headerH,(footerTop-titleTop)*.24);
   const queueTop=Math.max(leftRoof,titleTop+titleH);
   const queueH=footerTop-queueTop;
-  const cardH=Math.max(80,(queueH-16)/1.5);
-  const titleSize=Math.max(20,Math.min(queueW*0.056,cardH*0.22,70));
+  const cardH=Math.max(80,(queueH-16)/1.35);
+  const titleSize=Math.max(20,Math.min(queueW*0.060,cardH*0.24,76));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',titleSize+'px');
@@ -256,10 +263,6 @@ function draw(){
   const hostH=Math.max(20,Math.min(hostW*.19,dateTop-hostTop-3));
   box('.wall-host',L+8,hostTop,hostW,hostH);
   doc.querySelector('.wall-host').style.fontSize=Math.min(hostH*.88,hostW*.17)+'px';
-  const countX=L+queueW*.52;
-  const countW=queueW*.24;
-  const countTop=Math.max(roof(countX),roof(countX+countW))+4;
-  const countH=Math.max(30,Math.min(countW*.27,titleTop-countTop-4));
   box('.wall-count',countX,countTop,countW,countH);
   vars.setProperty('--count-size',Math.min(countH*.72,countW*.25)+'px');
   box('.wall-byline',L+8,dateTop,dateW,dateH);
