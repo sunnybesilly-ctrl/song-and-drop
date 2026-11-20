@@ -824,34 +824,7 @@ html, body { margin: 0; padding: 0; width: 100%; height: 100% !important; overfl
 @keyframes queueUp {from{transform:translate3d(0,0,0)}to{transform:translate3d(0,var(--tp),0)}}
 </style></head>
 <!-- KEEP SCREEN AWAKE: paste this right before </body> in BOTH music display files -->
-<video id="keepAwake" muted loop autoplay playsinline webkit-playsinline preload="auto" width="2" height="2" style="position:fixed;right:0;bottom:0;width:2px;height:2px;opacity:.02;pointer-events:none;z-index:-1">
-<source src="data:video/mp4;base64,AAAAIGZ0eXBpc29tAAACAGlzb21pc28yYXZjMW1wNDEAAANMbW9vdgAAAGxtdmhkAAAAAAAAAAAAAAAAAAAD6AAAB9AAAQAAAQAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAAAnZ0cmFrAAAAXHRraGQAAAADAAAAAAAAAAAAAAABAAAAAAAAB9AAAAAAAAAAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAABAAAAAAEAAAABAAAAAAAAkZWR0cwAAABxlbHN0AAAAAAAAAAEAAAfQAAAAAAABAAAAAAHubWRpYQAAACBtZGhkAAAAAAAAAAAAAAAAAAAoAAAAUABVxAAAAAAALWhkbHIAAAAAAAAAAHZpZGUAAAAAAAAAAAAAAABWaWRlb0hhbmRsZXIAAAABmW1pbmYAAAAUdm1oZAAAAAEAAAAAAAAAAAAAACRkaW5mAAAAHGRyZWYAAAAAAAAAAQAAAAx1cmwgAAAAAQAAAVlzdGJsAAAAuXN0c2QAAAAAAAAAAQAAAKlhdmMxAAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAEAAQABIAAAASAAAAAAAAAABFUxhdmM2MC4zMS4xMDIgbGlieDI2NAAAAAAAAAAAAAAAGP//AAAAL2F2Y0MBQsAe/+EAF2dCwB7ZBCbARAAAAwAEAAADACg8WLkgAQAFaMuDyyAAAAAQcGFzcAAAAAEAAAABAAAAFGJ0cnQAAAAAAAALpAAAC6QAAAAYc3R0cwAAAAAAAAABAAAACgAACAAAAAAUc3RzcwAAAAAAAAABAAAAAQAAABxzdHNjAAAAAAAAAAEAAAABAAAACgAAAAEAAAA8c3RzegAAAAAAAAAAAAAACgAAAo4AAAAKAAAACwAAAAoAAAAKAAAACgAAAAoAAAAKAAAACgAAAAoAAAAUc3RjbwAAAAAAAAABAAADfAAAAGJ1ZHRhAAAAWm1ldGEAAAAAAAAAIWhkbHIAAAAAAAAAAG1kaXJhcHBsAAAAAAAAAAAAAAAALWlsc3QAAAAlqXRvbwAAAB1kYXRhAAAAAQAAAABMYXZmNjAuMTYuMTAwAAAACGZyZWUAAALxbWRhdAAAAm8GBf//a9xF6b3m2Ui3lizYINkj7u94MjY0IC0gY29yZSAxNjQgcjMxMDggMzFlMTlmOSAtIEguMjY0L01QRUctNCBBVkMgY29kZWMgLSBDb3B5bGVmdCAyMDAzLTIwMjMgLSBodHRwOi8vd3d3LnZpZGVvbGFuLm9yZy94MjY0Lmh0bWwgLSBvcHRpb25zOiBjYWJhYz0wIHJlZj0zIGRlYmxvY2s9MTowOjAgYW5hbHlzZT0weDE6MHgxMTEgbWU9aGV4IHN1Ym1lPTcgcHN5PTEgcHN5X3JkPTEuMDA6MC4wMCBtaXhlZF9yZWY9MSBtZV9yYW5nZT0xNiBjaHJvbWFfbWU9MSB0cmVsbGlzPTEgOHg4ZGN0PTAgY3FtPTAgZGVhZHpvbmU9MjEsMTEgZmFzdF9wc2tpcD0xIGNocm9tYV9xcF9vZmZzZXQ9LTIgdGhyZWFkcz0xIGxvb2thaGVhZF90aHJlYWRzPTEgc2xpY2VkX3RocmVhZHM9MCBucj0wIGRlY2ltYXRlPTEgaW50ZXJsYWNlZD0wIGJsdXJheV9jb21wYXQ9MCBjb25zdHJhaW5lZF9pbnRyYT0wIGJmcmFtZXM9MCB3ZWlnaHRwPTAga2V5aW50PTEwIGtleWludF9taW49MSBzY2VuZWN1dD00MCBpbnRyYV9yZWZyZXNoPTAgcmNfbG9va2FoZWFkPTEwIHJjPWNyZiBtYnRyZWU9MSBjcmY9MjMuMCBxY29tcD0wLjYwIHFwbWluPTAgcXBtYXg9NjkgcXBzdGVwPTQgaXBfcmF0aW89MS40MCBhcT0xOjEuMDAAgAAAABdliIQEfJigADXzJycnXXXXXXXXXXXXgAAAAAZBmjgI+EYAAAAHQZpUAj4RgAAAAAZBmmAR8IwAAAAGQZqAEfCMAAAABkGaoBHwjAAAAAZBmsAR8IwAAAAGQZrgEfCMAAAABkGbABDwjAAAAAZBmyA/wjA=" type="video/mp4">
-<source src="data:video/webm;base64,GkXfo59ChoEBQveBAULygQRC84EIQoKEd2VibUKHgQJChYECGFOAZwEAAAAAAALCEU2bdLpNu4tTq4QVSalmU6yBoU27i1OrhBZUrmtTrIHYTbuMU6uEElTDZ1OsggEeTbuMU6uEHFO7a1OsggKs7AEAAAAAAABZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAVSalmsirXsYMPQkBNgI1MYXZmNjAuMTYuMTAwV0GNTGF2ZjYwLjE2LjEwMESJiECfQAAAAAAAFlSua8GuAQAAAAAAADjXgQFzxYhVJOSeo8ndZJyBACK1nIN1bmSIgQCGhVZfVlA4g4EBI+ODhAvrwgDgibCBQLqBQJqBAhJUw2f8c3OgY8CAZ8iaRaOHRU5DT0RFUkSHjUxhdmY2MC4xNi4xMDBzc9ZjwItjxYhVJOSeo8ndZGfIoUWjh0VOQ09ERVJEh5RMYXZjNjAuMzEuMTAyIGxpYnZweGfIoUWjiERVUkFUSU9ORIeTMDA6MDA6MDIuMDAwMDAwMDAwAB9DtnVBB+eBAKOqgQAAgPACAJ0BKkAAQAAARwiFhYiFhIgCAgAGcDxCYAqyIPcwAP7/qiWAo5aBAMgA0QEAARAQABgAGFgv9AAIjoAAo5aBAZAA0QEAARAQABgAGFgv9AAIjoAAo5aBAlgA0QEAARAQABgAGFgv9AAIjoAAo5aBAyAA0QEAARAQABgAGFgv9AAIjoAAo5aBA+gA0QEAARAQABgAGFgv9AAIjoAAo5aBBLAA0QEAARAQABgAGFgv9AAIjoAAo5aBBXgA0QEAARAQFGAAYWC/0AAiOgAAo5aBBkAA0QEAARAQABgAGFgv9AAIjoAAo5aBBwgA0QEAARAQABgAGFgv9AAIjoAAHFO7a5G7j7OBALeK94EB8YIBn/CBAw==" type="video/webm">
-</video>
-<script>
-(function () {
-  var v = document.getElementById("keepAwake");
-  v.muted = true; v.defaultMuted = true;
-  function go() { try { var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} }
-  go();
-  ["click", "keydown", "touchstart", "pointerdown"].forEach(function (t) { document.addEventListener(t, go, true); });
-  v.addEventListener("pause", go);
-  v.addEventListener("ended", go);
-  setInterval(function () { if (v.paused) go(); }, 5000);
-  var lock = null;
-  function wl() {
-    try {
-      if (navigator.wakeLock && navigator.wakeLock.request) {
-        navigator.wakeLock.request("screen").then(function (l) {
-          lock = l; l.addEventListener("release", function () { lock = null; });
-        }).catch(function () {});
-      }
-    } catch (e) {}
-  }
-  wl();
-  document.addEventListener("visibilitychange", function () { if (!document.hidden) { go(); wl(); } });
-})();
-</script>
+
   
 <body>
 <div id="stage">
@@ -2551,7 +2524,7 @@ function playUrl(m) {
    const trans=[];
    if(Number(m.trimStart)>0)trans.push("so_"+Number(m.trimStart).toFixed(2));
    if(Number(m.trimEnd)>0)trans.push("eo_"+Number(m.trimEnd).toFixed(2));
-   trans.push("f_mp4","vc_h264","ac_aac","q_auto");
+   trans.push("c_limit","w_854","h_480","fps_24","f_mp4","vc_h264:baseline","ac_none","q_auto:eco");
    return p.pre+"video/"+p.delivery+"/"+trans.join(",")+"/"+swapExt(p.tail,".mp4");
  }
  const keep=/\.(jpe?g|png|webp|gif)$/i.test(p.tail);
@@ -2646,13 +2619,16 @@ function brightenPhoto(image) {
   } catch { /* Some photo hosts permit display but block pixel sampling. */ }
   if (gain > 1) image.style.filter = "brightness(" + gain + ")";
 }
+let playbackIssue = '';
 function present(url, type, name) {
   return new Promise(resolve => {
     const video = type === "video";
     const media = document.createElement(video ? "video" : "img");
     let timer;
     let plays = 0;
+    let prompt;
     function finish(success) {
+      prompt?.remove();
       clearTimeout(timer);
       media.onerror = media.onload = media.onplaying = media.onended = media.ontimeupdate = null;
       if (video) media.pause();
@@ -2679,7 +2655,10 @@ function present(url, type, name) {
       if (media.parentNode !== stage) stage.replaceChildren(media);
       panel.hidden = false;
     }
-    media.onerror = () => finish(false);
+    media.onerror = () => {
+      if(video) playbackIssue = ({2:"Video network error",3:"Video decoding failed",4:"Video source unsupported or unavailable"})[media.error?.code] || "Video load failed";
+      finish(false);
+    };
     timeout(video ? 45000 : 15000);
     if (video) {
       media.muted = true;
@@ -2687,16 +2666,31 @@ function present(url, type, name) {
       media.playsInline = true;
       media.preload = "auto";
       reveal();
-      media.onplaying = () => { reveal(); timeout(20000); };
+      media.onplaying = () => { prompt?.remove(); prompt=null; reveal(); timeout(20000); };
       media.ontimeupdate = () => { updateClock(); timeout(20000); };
+      function startVideo() {
+        const attempt = media.play();
+        attempt?.catch(error => {
+          if (error.name !== "NotAllowedError") { playbackIssue = "Video playback: " + error.name; finish(false); return; }
+          playbackIssue = "Projector requires a playback gesture";
+          if (!prompt) {
+            prompt = document.createElement("button");
+            prompt.textContent = "Play video";
+            prompt.style.cssText = "position:absolute;inset:35% 10%;z-index:5;font:bold 48px system-ui;color:#111;background:#ffe65f";
+            prompt.onclick = startVideo;
+            stage.append(prompt);
+            prompt.focus();
+          }
+        });
+      }
       media.onended = () => {
         if (++plays === 1 && media.duration < 6) {
           media.currentTime = 0;
-          media.play().catch(() => finish(false));
+          startVideo();
         } else finish(true);
       };
       media.src = url;
-      media.play().catch(() => finish(false));
+      startVideo();
     } else {
       media.crossOrigin = "anonymous";
       media.onerror = () => {
@@ -2719,6 +2713,7 @@ async function rotate() {
     const started = Date.now();
     lastIssue = '';
     reelStatus.textContent = 'Loading Drop Your Shot…';
+    playbackIssue = "";
     let candidates;
     const paired = auth.currentUser.isAnonymous;
     if (paired) {
@@ -2778,7 +2773,7 @@ async function rotate() {
     }
     if (shown.size) {
       nextRound = started + 60000;
-    } else lastIssue = "Media files could not play · retrying";
+    } else lastIssue = (playbackIssue || "Media files could not play") + " · retrying";
   } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
   finally { panel.hidden = true; rotating = false; retryAt = Date.now() + 10000; if(lastIssue) reelStatus.textContent=lastIssue; }
 }
