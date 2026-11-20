@@ -76,6 +76,19 @@ function draw(){
    #stage .qr-wall-label{font:800 36px/1.1 system-ui;color:#fff;text-align:center}
    #stage .qr-wrap,#stage .qr-link{padding:0;border:0;background:white;border-radius:0;box-shadow:none;line-height:0}
    #stage .qr-wrap svg{display:block;width:var(--code-size);height:var(--code-size);background:white}
+   #stage .ticker-section{padding:0 8px 0 0}
+   #stage #tickerWrapper .song-card{min-height:var(--song-height);height:auto;position:relative;padding:18px 24px;gap:22px;background:#09241b;box-shadow:none!important;border:2px solid #64826d!important;border-left:8px solid #f8df75!important;border-radius:18px;transform:none!important}
+   #stage #tickerWrapper .thumbnail{width:26%;height:auto;aspect-ratio:16/9;object-fit:cover;border-radius:8px;box-shadow:none}
+   #stage #tickerWrapper .card-num{width:12%;align-self:center;background:transparent!important;color:#ffe77e;overflow:visible}
+   #stage #tickerWrapper .cn-val{font:850 calc(var(--song-title)*1.45)/1 system-ui;font-variant-numeric:tabular-nums;letter-spacing:-.055em}
+   #stage #tickerWrapper .cn-3 .cn-val{font-size:var(--song-title)}
+   #stage #tickerWrapper .cn-4 .cn-val{font-size:calc(var(--song-title)*.78)}
+   #stage #tickerWrapper .cn-label,#stage #tickerWrapper .cn-of{font:750 calc(var(--song-title)*.42)/1.1 system-ui}
+   #stage #tickerWrapper .song-info{gap:6px;overflow:visible}
+   #stage #tickerWrapper .card-song{order:-1;display:block;overflow:visible;white-space:normal;overflow-wrap:anywhere;color:#fff!important;font:800 var(--song-title)/1.06 system-ui;letter-spacing:-.025em}
+   #stage #tickerWrapper .card-artist,#stage #tickerWrapper .card-requester{font:650 calc(var(--song-title)*.59)/1.12 system-ui;white-space:normal;overflow-wrap:anywhere}
+   #stage #tickerWrapper .card-requester{color:#ffe77e!important;order:2}
+   #stage #tickerWrapper .card-requester::before{content:'Requested by '}
    `;
    doc.head.appendChild(css);
    doc.querySelector('.qr-howto').textContent='Point your phone camera at a code. Tap the link.';
@@ -96,19 +109,32 @@ function draw(){
   const pxX=x=>(x-x0)*innerWidth/100/unit,pxY=y=>(y-y0)*innerHeight/100/unit;
   const L=Math.max(...[a,d,e].map(p=>pxX(p[0])))+9,R=Math.min(pxX(b[0]),pxX(c[0]))-9;
   const base=Math.min(pxY(d[1]),pxY(c[1]))-8;
-  const split=L+(R-L)*0.55;
+  const span=R-L;
+  const usableHeight=base-pxY(b[1]);
+  const mediaWidth=Math.min(span*0.43,Math.max(span*0.35,usableHeight*0.78));
+  const split=R-mediaWidth;
   const roof=x=>pxY(a[1])+(x-pxX(a[0]))*(pxY(b[1])-pxY(a[1]))/(pxX(b[0])-pxX(a[0]));
   const leftRoof=Math.max(roof(L),roof(split))+8,rightRoof=Math.max(roof(split),roof(R))+8;
-  const footerH=Math.min((split-L)*0.40,(base-leftRoof)*0.46);
+  const footerH=Math.min((split-L)*0.34,(base-leftRoof)*0.38);
   const footerTop=base-footerH;
-  const headerH=Math.min(115,(footerTop-leftRoof)*0.27);
+  const queueW=split-L;
+  const headerW=queueW*0.77;
+  const headerTop=Math.max(roof(L),roof(L+headerW))+8;
+  const headerH=Math.min(110,(footerTop-headerTop)*0.2);
+  const queueTop=Math.max(leftRoof,headerTop+headerH);
+  const queueH=footerTop-queueTop;
+  const cardH=Math.min(queueH,Math.max(queueH*0.67,queueW*0.25));
+  const titleSize=Math.max(28,Math.min(queueW*0.056,cardH*0.21,70));
+  const vars=doc.documentElement.style;
+  vars.setProperty('--song-height',cardH+'px');
+  vars.setProperty('--song-title',titleSize+'px');
   function box(selector,x,y,w,h){
    const el=doc.querySelector(selector);
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  box('.header',L,leftRoof,split-L,headerH);
-  box('.ticker-section',L,leftRoof+headerH,split-L,footerTop-leftRoof-headerH);
+  box('.header',L,headerTop,headerW,headerH);
+  box('.ticker-section',L,queueTop,queueW,queueH);
   box('#chatSection',split+5,rightRoof,R-split-5,base-rightRoof);
   box('.qr-footer',L,footerTop,split-L,footerH);
   doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-108,(split-L)/2-16)))+'px');
