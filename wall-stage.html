@@ -150,6 +150,14 @@ function draw(){
    #stage #tickerWrapper .song-info{gap:3px}
    #stage #tickerWrapper .card-artist,#stage #tickerWrapper .card-requester{font-size:calc(var(--song-title)*.63)}
    #stage #tickerWrapper .card-hype{font-size:calc(var(--song-title)*.5);line-height:1.1}
+   #stage .wall-count{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;gap:6px}
+   #stage .wall-count .total-stat{padding:3px 8px;gap:7px;border-width:2px}
+   #stage .wall-count .ts-num{font-size:var(--count-size);line-height:1}
+   #stage .wall-count .ts-label{font-size:calc(var(--count-size)*.3);line-height:1.05}
+   #stage .wall-count .dot{width:8px;height:8px}
+   #stage .header{justify-content:center;align-items:center;padding:0 8px;border-bottom-width:2px}
+   #stage .header>div:first-child{width:100%;align-items:center!important}
+   #stage .header .title{font-weight:650!important;letter-spacing:.1em;text-align:center}
    `;
    doc.head.appendChild(css);
    doc.querySelector('.qr-howto').textContent='📸 Point your phone camera at a code → Tap the link';
@@ -159,6 +167,8 @@ function draw(){
    showPair();
    doc.defaultView.setInterval(()=>{pair=1-pair;showPair()},15000);
    const byline=doc.createElement('div');byline.className='wall-byline';
+   const count=doc.querySelector('.header-right');
+   count.classList.add('wall-count');doc.querySelector('#stage>.container').appendChild(count);
    const host=doc.createElement('strong');host.textContent='DJ Sunny';
    host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);byline.append(doc.getElementById('headerDate'),doc.querySelector('.title-sub'));doc.querySelector('#stage>.container').appendChild(byline);
    const labels=['Request a song','Party chat','Tip the DJ','Snapchat'];
@@ -215,9 +225,9 @@ function draw(){
   const footerH=Math.min((split-L)*0.34,(base-leftRoof)*0.38);
   const footerTop=base-footerH;
   const queueW=split-L;
-  const headerW=queueW*0.72;
-  const headerTop=Math.max(roof(L),roof(L+headerW))+24;
-  const headerH=Math.min(100,(footerTop-headerTop)*0.16);
+  const headerW=queueW;
+  const headerTop=Math.max(roof(L),roof(L+headerW))+8;
+  const headerH=Math.min(65,(footerTop-headerTop)*0.12);
   const dateW=queueW*.48;
   const dateTop=Math.max(roof(L),roof(L+dateW))+10;
   const dateH=Math.min(dateW*.19,(footerTop-dateTop)*.19);
@@ -240,6 +250,12 @@ function draw(){
   const hostH=Math.max(20,Math.min(hostW*.19,dateTop-hostTop-3));
   box('.wall-host',L+8,hostTop,hostW,hostH);
   doc.querySelector('.wall-host').style.fontSize=Math.min(hostH*.88,hostW*.17)+'px';
+  const countX=L+queueW*.30;
+  const countW=queueW*.24;
+  const countTop=Math.max(roof(countX),roof(countX+countW))+4;
+  const countH=Math.max(30,Math.min(countW*.27,titleTop-countTop-4));
+  box('.wall-count',countX,countTop,countW,countH);
+  vars.setProperty('--count-size',Math.min(countH*.72,countW*.25)+'px');
   box('.wall-byline',L+8,dateTop,dateW,dateH);
   const byline=doc.querySelector('.wall-byline');
   let size=Math.min(dateW*.083,dateH*.32);
