@@ -100,9 +100,15 @@ function draw(){
    #stage .header{padding:4px 8px;gap:8px;white-space:nowrap}
    #stage .header .title{font-size:var(--head-size,52px);line-height:1}
    #stage .header-right .ts-num{font-size:var(--head-size,52px)}
+   #stage .qr-howto{font:900 var(--prompt-size,40px)/1.12 "Arial Rounded MT Bold","Trebuchet MS",system-ui,sans-serif;letter-spacing:.015em;padding:7px 8px;color:#182818;background:linear-gradient(90deg,#ffda58,#fff1a2 50%,#ffda58);white-space:normal;text-wrap:balance}
+   #stage .qr-row{padding:6px 10px;justify-items:stretch}
+   #stage .qr-section{display:grid;box-sizing:border-box;grid-template-columns:var(--code-size) minmax(0,1fr);grid-template-rows:minmax(0,1fr);align-items:center;align-content:center;justify-items:center;padding:6px 10px;column-gap:10px;max-width:100%!important}
+   #stage .qr-wrap{grid-column:1;grid-row:1;width:var(--code-size);justify-self:center}
+   #stage .qr-wall-label{grid-column:2;grid-row:1;min-width:0;white-space:normal;line-height:1.08;text-align:left;justify-self:stretch;display:block;overflow-wrap:anywhere}
+   #stage .qr-wall-label svg{display:block;margin-bottom:4px}
    `;
    doc.head.appendChild(css);
-   doc.querySelector('.qr-howto').textContent='Point your phone camera at a code. Tap the link.';
+   doc.querySelector('.qr-howto').textContent='📸 Point your phone camera at a code → Tap the link';
    const sections=Array.from(doc.querySelectorAll('.qr-section'));
    let pair=0;
    function showPair(){sections.forEach((section,i)=>{section.hidden=Math.floor(i/2)!==pair})}
@@ -166,10 +172,13 @@ function draw(){
   box('.header',L,headerTop,headerW,headerH);
   box('.ticker-section',L,queueTop,queueW,queueH);
   box('#chatSection',split+5,rightRoof,R-split-5,base-rightRoof);
-  box('.qr-footer',L,footerTop,split-L,footerH);
+  const qrInset=queueW*.045;
+  const qrWidth=queueW-qrInset;
+  box('.qr-footer',L+qrInset,footerTop,qrWidth,footerH);
+  vars.setProperty('--prompt-size',Math.min(qrWidth*.043,footerH*.19)+'px');
   vars.setProperty('--head-size',Math.min(headerW*.071,headerH*.54)+'px');
-  vars.setProperty('--label-size',Math.min(34,footerH*.11)+'px');
-  doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-doc.querySelector(".qr-howto").offsetHeight-Math.min(34,footerH*.11)*1.15-37,(split-L)/2-42)))+'px');
+  vars.setProperty('--label-size',Math.min(qrWidth*.04,footerH*.24)+'px');
+  doc.documentElement.style.setProperty('--code-size',Math.max(16,Math.floor(Math.min(footerH-doc.querySelector(".qr-howto").offsetHeight-38,(qrWidth-32)*.29-25)))+'px');
  }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
  byId('panel').hidden=byId('handles').hidden=!editing;byId('edit').hidden=editing;
