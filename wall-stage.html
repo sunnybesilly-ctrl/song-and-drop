@@ -146,7 +146,11 @@ function draw(){
    #stage .wall-host{position:absolute;z-index:4;display:flex;align-items:center;white-space:nowrap;color:#a4ffc0;font-weight:900;line-height:1;text-shadow:0 0 8px #62ffa955}
    #stage #tickerWrapper{gap:16px}
    #stage #tickerWrapper .song-card{padding:10px 14px;gap:14px;min-height:var(--song-height)}
-   #stage #tickerWrapper .thumbnail{width:23%}
+   #stage #tickerWrapper .thumbnail{width:35%;flex:0 0 35%;height:auto;max-width:none;object-fit:cover}
+   #stage #tickerWrapper .song-info{flex:1 1 0;min-width:0}
+   #stage #shotReel .chat-header svg{display:block;width:91%;height:1.15em;margin:auto}
+   #stage #mainTitle svg{display:block;width:100%;height:1em}
+   #stage .qr-wall-label,#stage .shot-caption{font-family:"Arial Rounded MT Bold",ui-rounded,"Trebuchet MS",sans-serif;font-weight:800}
    #stage #tickerWrapper .song-info{gap:3px}
    #stage #tickerWrapper .card-artist,#stage #tickerWrapper .card-requester{font-size:calc(var(--song-title)*.63)}
    #stage #tickerWrapper .card-hype{font-size:calc(var(--song-title)*.5);line-height:1.1}
@@ -185,6 +189,8 @@ function draw(){
    #stage .wall-info .wall-count{margin-top:.07em!important}
    `;
    doc.head.appendChild(css);
+   doc.querySelector('#shotReel .chat-header').innerHTML='<svg aria-label="DROP YOUR SHOT" role="img" viewBox="-2 -1 310 30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="shotGloss" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fff"/><stop offset=".18" stop-color="#8dffb4"/><stop offset=".45" stop-color="#fffbd9"/><stop offset=".58" stop-color="#8dffb4"/><stop offset="1" stop-color="#179c60"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.8" stroke="url(#shotGloss)"><path transform="translate(0 0)" d="M5 22V5C22 3 23 23 5 22Z"/><path transform="translate(24 0)" d="M4 22V5H11C22 5 21 15 10 15H6M11 15L19 22"/><path transform="translate(48 0)" d="M11 4C0 4 0 23 11 23S22 4 11 4Z"/><path transform="translate(72 0)" d="M4 22V5H11C23 5 22 16 11 16H5"/><path transform="translate(106 0)" d="M4 5L11 14L18 5M11 14V22"/><path transform="translate(130 0)" d="M11 4C0 4 0 23 11 23S22 4 11 4Z"/><path transform="translate(154 0)" d="M4 5V15C4 26 18 26 18 15V5"/><path transform="translate(178 0)" d="M4 22V5H11C22 5 21 15 10 15H6M11 15L19 22"/><path transform="translate(212 0)" d="M18 6C5 0 0 12 12 14S21 26 4 21"/><path transform="translate(236 0)" d="M4 5V22M18 5V22M5 14H17"/><path transform="translate(260 0)" d="M11 4C0 4 0 23 11 23S22 4 11 4Z"/><path transform="translate(284 0)" d="M3 5H19M11 5V22"/></g></svg>';
+   doc.querySelector('#mainTitle').innerHTML='<svg aria-label="JUKEBOX" role="img" viewBox="-2 -1 170 30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="jukeboxGloss" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fff"/><stop offset=".18" stop-color="#8dffb4"/><stop offset=".45" stop-color="#fffbd9"/><stop offset=".58" stop-color="#8dffb4"/><stop offset="1" stop-color="#179c60"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.8" stroke="url(#jukeboxGloss)"><path transform="translate(0 0)" d="M17 5V16Q17 27 5 20"/><path transform="translate(24 0)" d="M4 5V15C4 26 18 26 18 15V5"/><path transform="translate(48 0)" d="M4 5V22M17 5L6 14L18 22"/><path transform="translate(72 0)" d="M18 5H4V22H18M5 13H15"/><path transform="translate(96 0)" d="M4 22V5H11C20 5 20 13 11 13H5M11 13C22 13 22 22 11 22Z"/><path transform="translate(120 0)" d="M11 4C0 4 0 23 11 23S22 4 11 4Z"/><path transform="translate(144 0)" d="M4 5L18 22M18 5L4 22"/></g></svg>';
    doc.querySelector('.qr-howto').innerHTML='<svg aria-label="wanna??" role="img" viewBox="-2 -1 170 30" xmlns="http://www.w3.org/2000/svg"><defs><linearGradient id="scanGloss" x2="0" y2="1" gradientUnits="objectBoundingBox"><stop stop-color="#fff"/><stop offset=".18" stop-color="#ffdc53"/><stop offset=".45" stop-color="#fffbd9"/><stop offset=".58" stop-color="#ffdc53"/><stop offset="1" stop-color="#b57803"/></linearGradient></defs><g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="6.8" stroke="url(#scanGloss)"><path transform="translate(0 0)" d="M3 8L6 22L11 13L16 22L20 8"/><path transform="translate(24 0)" d="M17 10C2 3 0 27 13 21Q16 20 17 12V22"/><path transform="translate(48 0)" d="M4 22V9M4 16C7 4 18 5 18 15V22"/><path transform="translate(72 0)" d="M4 22V9M4 16C7 4 18 5 18 15V22"/><path transform="translate(96 0)" d="M17 10C2 3 0 27 13 21Q16 20 17 12V22"/><path transform="translate(120 0)" d="M4 8C6 0 23 3 16 12L11 16M11 22v.1"/><path transform="translate(144 0)" d="M4 8C6 0 23 3 16 12L11 16M11 22v.1"/></g></svg>';
    const sections=Array.from(doc.querySelectorAll('.qr-section'));
    let active=0;
@@ -264,7 +270,7 @@ function draw(){
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
   const cardH=Math.max(80,Math.min((queueH-16)/1.5,queueW*.27));
-  const titleSize=Math.max(20,Math.min(queueW*0.060,cardH*0.24,76));
+  const titleSize=Math.max(20,Math.min(queueW*.050,cardH*.21,64));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',titleSize+'px');
