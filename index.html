@@ -1002,7 +1002,7 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
 <button type="submit">Connect projector</button>
 <span role="status"></span></form>
 <div id="shotReel" hidden><div class="chat-header">DROP YOUR SHOT</div><div class="shot-stage"></div><div class="shot-caption"><span id="shotCredit"></span><span id="shotClock" hidden></span></div></div>
-        <div class="chat-header">💬 PARTY CHAT 💬</div>
+        <div class="chat-header">💬 PARTY CHAT 💬<div id="reelStatus" role="status" style="font:700 28px/1.2 system-ui;letter-spacing:0;color:white">Connecting to Drop Your Shot…</div></div>
         <!-- Ghost bubble container — floats above chat messages -->
         <div id="ghostBubbleContainer" style="position:relative;flex-shrink:0;height:0;overflow:visible;"></div>
         <div class="chat-messages" id="chatMessages">
@@ -2497,6 +2497,12 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
   document.addEventListener('visibilitychange', function () { if (document.visibilityState === 'visible') lock(); });
 })();
 </script>
+<script>
+setTimeout(function(){
+  const el=document.getElementById("reelStatus");
+  if(el && el.textContent==="Connecting to Drop Your Shot…") el.textContent="Media connection unavailable · reload to reconnect";
+},15000);
+</script>
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
 import {getFirestore, collection, query, where, getDocs, getDoc, doc} from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -2576,7 +2582,9 @@ function pendingUploads(items) {
 }
 const login = document.getElementById("shotLogin");
 const status = login.querySelector('[role="status"]');
-let nextRound = Date.now() + 60000;
+const reelStatus = document.getElementById("reelStatus");
+let nextRound = performance.timeOrigin + 60000;
+let lastIssue = "";
 let retryAt = 0;
 let pairedUid = localStorage.getItem('pairedProjectorUid');
 const projectorCall = name => httpsCallable(getFunctions(app,'us-central1'),name);
@@ -2585,12 +2593,17 @@ function authorized(user) {
   return user?.email === "sunnybesilly@gmail.com" && user.emailVerified;
 }
 function tick() {
+  if (authorized(auth.currentUser) && !rotating && !lastIssue) {
+    const seconds=Math.max(0,Math.ceil((nextRound-Date.now())/1000));
+    reelStatus.textContent=seconds ? "Drop Your Shot in " + seconds + "s" : "Loading Drop Your Shot…";
+  }
   if (!rotating && !document.hidden && authorized(auth.currentUser) && Date.now() >= Math.max(nextRound,retryAt)) {
     void rotate();
   }
 }
 onAuthStateChanged(auth, user => {
   login.hidden = authorized(user);
+  if (!login.hidden) reelStatus.textContent = 'Pair this projector to show media';
   status.textContent = user && !user.isAnonymous && !login.hidden ? "Use the verified DJ admin account." : "";
   tick();
 });
@@ -2704,6 +2717,8 @@ async function rotate() {
     await auth.authStateReady();
     if (!authorized(auth.currentUser)) return;
     const started = Date.now();
+    lastIssue = '';
+    reelStatus.textContent = 'Loading Drop Your Shot…';
     let candidates;
     const paired = auth.currentUser.isAnonymous;
     if (paired) {
@@ -2719,7 +2734,7 @@ async function rotate() {
       }
     } else {
     const state = (await getDoc(doc(db, "gallery_state", "current"))).data();
-    if (!state?.active || !state.eventId) return;
+    if (!state?.active || !state.eventId) { lastIssue="Gallery closed · waiting for an active event"; return; }
     const snapshot = await getDocs(query(collection(db, "media_queue"), where("eventId", "==", state.eventId)));
     candidates = snapshot.docs.map(row => ({...row.data(), key:row.id})).filter(item => item.url && !item.rotationPaused && kindOf(item));
     }
@@ -2727,6 +2742,7 @@ async function rotate() {
       const j = Math.floor(Math.random() * (i + 1));
       [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
     }
+    if (!candidates.length) { lastIssue='No available uploads in the active event'; return; }
     candidates = pendingUploads(candidates);
     const links = createAdminPhotoLinks(sign);
     const seen = new Set();
@@ -2762,9 +2778,9 @@ async function rotate() {
     }
     if (shown.size) {
       nextRound = started + 60000;
-    }
-  } catch (error) { console.warn("Drop Your Shot rotation unavailable", error); }
-  finally { panel.hidden = true; rotating = false; retryAt = Date.now() + 10000; }
+    } else lastIssue = "Media files could not play · retrying";
+  } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
+  finally { panel.hidden = true; rotating = false; retryAt = Date.now() + 10000; if(lastIssue) reelStatus.textContent=lastIssue; }
 }
 setInterval(tick, 1000);
 </script>
