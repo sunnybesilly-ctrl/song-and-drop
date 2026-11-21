@@ -217,7 +217,9 @@ function draw(){
    #stage .qr-wrap img.brand-code{image-rendering:pixelated}
    #stage .wall-count{position:absolute!important;box-sizing:border-box;justify-content:center;border:3px solid #e2bc60;border-radius:14px;background:#173025;gap:.4em}
    #stage .wall-count .dot{width:calc(var(--count-size)*.38);height:calc(var(--count-size)*.38);flex:none}
-   #stage #tickerWrapper .song-card{padding-left:calc(10px + var(--ticket-inset,0px))}
+   #stage .wall-count .ts-label{font-size:calc(var(--count-size)*.61);line-height:1;letter-spacing:.015em}
+   #stage .wall-count .total-stat{gap:.25em}
+   #stage #tickerWrapper .song-card{padding-left:10px}
    #stage #tickerWrapper.is-static{width:100%;margin-inline:0}
    #stage #tickerWrapper .card-num *{color:#10261b!important}
    `;
@@ -280,7 +282,7 @@ function draw(){
   }
   const pxX=x=>(x-x0)*innerWidth/100/unit,pxY=y=>(y-y0)*innerHeight/100/unit;
   const L=Math.max(...[a,d,e].map(p=>pxX(p[0])))+9,R=Math.min(pxX(b[0]),pxX(c[0]))-9;
-  const base=Math.min(pxY(d[1]),pxY(c[1]))-22;
+  const base=Math.min(pxY(d[1]),pxY(c[1]));
   const span=R-L;
   const usableHeight=base-pxY(b[1]);
   const mediaWidth=Math.min(span*0.43,Math.max(span*0.35,usableHeight*0.78));
@@ -295,9 +297,9 @@ function draw(){
    const edge=y<pxY(e[1])?[a,e]:[e,d];
    const [u,v]=edge;
    const t=Math.max(0,Math.min(1,(y-pxY(u[1]))/(pxY(v[1])-pxY(u[1])||1)));
-   return pxX(u[0])+(pxX(v[0])-pxX(u[0]))*t+9;
+   return pxX(u[0])+(pxX(v[0])-pxX(u[0]))*t;
   }
-  const infoX=Math.max(leftEdge(footerTop),leftEdge(base),...(pxY(e[1])>footerTop&&pxY(e[1])<base?[pxX(e[0])+9]:[]));
+  const infoX=Math.max(leftEdge(footerTop),leftEdge(base),...(pxY(e[1])>footerTop&&pxY(e[1])<base?[pxX(e[0])]:[]));
   const infoW=L+headerW-infoX;
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
@@ -320,24 +322,23 @@ function draw(){
    if(info.scrollHeight<=infoH+1 && info.scrollWidth<=infoW+1)break;
    size-=1;
   }while(size>=8);
-  // Fit the queue frame to the calibrated overhang while keeping tickets inside it.
+  // Keep the queue vertical at the innermost point of the calibrated side.
   const bendY=Math.max(queueTop,Math.min(footerTop,pxY(e[1])));
-  const edge=[queueTop,bendY,footerTop].map(y=>[leftEdge(y),y]);
-  const queueX=Math.min(...edge.map(([x])=>x));
-  const safeX=Math.max(...edge.map(([x])=>x));
+  const queueX=Math.max(leftEdge(queueTop),leftEdge(bendY),leftEdge(footerTop));
   box('.ticker-section',queueX,queueTop,split-queueX,queueH);
-  const ticker=doc.querySelector('.ticker-section');
-  ticker.style.paddingLeft='0';
-  vars.setProperty('--ticket-inset',(safeX-queueX)+'px');
-  const outline=edge.slice().reverse().map(([x,y])=>(x-queueX)+'px '+(y-queueTop)+'px');
-  ticker.style.clipPath='polygon(100% 0,100% 100%,'+outline.join(',')+')';
   const counterX=split+5;
   const counterW=(R-counterX)*.48;
   const counterH=Math.min(counterW*.33,(base-rightRoof)*.17);
   const counterY=Math.max(roof(counterX),roof(counterX+counterW))+8;
   const mediaTop=Math.max(rightRoof,counterY+counterH+5);
   box('.wall-count',counterX,counterY,counterW,counterH);
-  vars.setProperty('--count-size',Math.min(counterW*.19,counterH*.75)+'px');
+  const counter=doc.querySelector('.wall-count');
+  let countSize=Math.min(counterW*.27,counterH*.86);
+  do{
+   vars.setProperty('--count-size',countSize+'px');
+   if(counter.scrollWidth<=counter.clientWidth && counter.scrollHeight<=counter.clientHeight)break;
+   countSize-=1;
+  }while(countSize>=8);
   box('#chatSection',counterX,mediaTop,R-counterX,base-mediaTop);
   const qrInset=queueW*.48;
   const qrWidth=queueW-qrInset;
