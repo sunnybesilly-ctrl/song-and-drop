@@ -293,6 +293,9 @@ function draw(){
      -webkit-text-stroke:.014em #fce190;text-shadow:none!important;filter:drop-shadow(0 .05em 0 #855614) drop-shadow(0 .045em 0 #48261e);font-weight:700!important
     }
    }
+   #stage#stage#stage .wall-info .wall-host,#stage#stage#stage .wall-info .wall-byline{font-size:inherit!important;line-height:1!important;flex:none}
+   #stage#stage#stage .wall-info{gap:.25em}
+   #stage#stage#stage .qr-wrap img.brand-code~svg{display:none!important}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -333,10 +336,14 @@ function draw(){
     section.querySelector('a').insertAdjacentHTML('beforeend',art);
     const label=doc.createElement('div');label.className='qr-wall-label';
     ['.qr-tag','.qr-verb','.qr-noun','.qr-sub'].forEach(selector=>label.appendChild(section.querySelector(selector)));
-    label.textContent=['Request a song','Join party chat','Tip the DJ','Follow on Snapchat'][i];section.appendChild(label);
+    label.textContent=['♫  Request a song','☀  Join party chat','Cash App · Tip the DJ','Snapchat · @eatitall'][i];section.appendChild(label);
     if(i>=2){
      section.querySelector('a').href=["https://cash.app/$SunnyAubade", "https://snapchat.com/t/juFcqBGk"][i-2];
-     section.querySelector('.qr-wrap img')?.remove();
+     const image=section.querySelector('.qr-wrap img');
+     function showBrand(){image.classList.toggle('brand-code',image.naturalWidth>0)}
+     image.addEventListener('load',showBrand);
+     image.addEventListener('error',()=>image.classList.remove('brand-code'));
+     showBrand();
     }
    });
   }
@@ -414,7 +421,7 @@ function draw(){
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  const infoH=Math.min(footerH*.23,queueW*.064);
+  const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
   fitLeftPanel('.wall-info',base-infoH,split,infoH+bottomEdge-base);
   doc.querySelector('.wall-info').style.paddingBottom=(bottomEdge-base)+'px';
@@ -422,14 +429,14 @@ function draw(){
   let size=Math.max(8,Math.min(queueW*.095,infoH*.78));
   do{
    info.style.fontSize=size+'px';
-   if(info.scrollHeight<=infoH+1 && info.scrollWidth<=info.clientWidth+1)break;
+   if(info.scrollHeight<=info.clientHeight+1 && info.scrollWidth<=info.clientWidth+1)break;
    size-=1;
   }while(size>=8);
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
   const counterX=split+5;
   const counterW=R-counterX;
-  const counterH=Math.min(counterW*.33,(base-rightRoof)*.17);
-  const counterY=Math.max(roof(counterX),roof(counterX+counterW))+8;
+  const counterH=Math.min(counterW*.24,(base-rightRoof)*.105);
+  const counterY=Math.max(roof(counterX),roof(counterX+counterW))+3;
   const mediaTop=Math.max(rightRoof,counterY+counterH+5);
   box('.wall-count',counterX,counterY,counterW,counterH);
   const counter=doc.querySelector('.wall-count');
