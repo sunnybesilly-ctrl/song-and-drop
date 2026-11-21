@@ -273,12 +273,32 @@ function draw(){
    #stage .qr-howto::after{display:none}
    #stage .qr-howto strong{color:#ffd34d;font-size:var(--prompt-size)}
    #stage .qr-howto span{color:#fff8e1;font-size:calc(var(--prompt-size)*.72);font-weight:600;letter-spacing:0;text-transform:none}
+
+   #stage#stage#stage .qr-footer{display:grid;grid-template-columns:27% minmax(0,1fr);gap:1%;align-items:stretch;border-radius:0;border-block:2px solid #ccad58;background:#112c24!important;padding-right:5px}
+   #stage#stage#stage .qr-footer .qr-howto{display:grid!important;grid-template-columns:auto 1fr;align-content:center;align-items:center;justify-items:start;text-align:left;padding:0 4%;gap:.12em .15em;background:transparent!important;white-space:normal}
+   #stage .qr-howto strong{font-size:var(--prompt-size);line-height:1.15}
+   #stage .qr-howto b{color:#ff8579;font-size:calc(var(--prompt-size)*.68)}
+   #stage .qr-howto span{grid-column:1/-1;font-size:calc(var(--prompt-size)*.51);line-height:1.1;text-align:left;letter-spacing:0}
+   #stage .qr-footer .qr-row{min-width:0;height:100%;grid-template-columns:repeat(2,minmax(0,1fr));padding:3px;gap:5px}
+   #stage#stage#stage .qr-row .qr-section{background:#16382b!important;border:2px solid #b89948!important;border-radius:12px;gap:3px;padding:3px 1px 12px}
+   #stage#stage#stage .qr-row .qr-wall-label{font-size:var(--label-size);letter-spacing:.005em;text-transform:none;color:#ffdf86!important}
+   #stage .qr-wrap svg{border-radius:5%;outline:2px solid #dfba58;shape-rendering:auto}
+   #stage#stage#stage .wall-info{border-radius:0;background:#102a22!important}
+   #stage .wall-info .wall-byline{font-size:.92em}
+   #stage .wall-info .wall-date{font-size:1em;line-height:1;color:#fff2bb}
+   @supports ((-webkit-background-clip:text) or (background-clip:text)){
+    #stage#stage#stage .qr-howto strong,#stage#stage#stage .wall-info .wall-host{
+     background:linear-gradient(174deg,#fffcec 10%,#fff8c4 27%,#ffe178 40%,#df9e20 55%,#ffe394 75%,#fff0ae 89%)!important;
+     -webkit-background-clip:text!important;background-clip:text!important;-webkit-text-fill-color:transparent!important;
+     -webkit-text-stroke:.014em #fce190;text-shadow:none!important;filter:drop-shadow(0 .05em 0 #855614) drop-shadow(0 .045em 0 #48261e);font-weight:700!important
+    }
+   }
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
    doc.querySelector('#shotReel .chat-header').textContent='DROP YOUR SHOT';
    doc.querySelector('.header').style.setProperty('display','none','important');
-   doc.querySelector('.qr-howto').innerHTML='<strong>Wanna?</strong><span>Point your camera, then tap the link.</span>';
+   doc.querySelector('.qr-howto').innerHTML='<strong>Wanna?</strong><b aria-hidden="true">➜</b><span>Point your camera.<br>Tap the link.</span>';
    const sections=Array.from(doc.querySelectorAll('.qr-section'));
    const status=doc.createElement('div');status.className='swap-status';
    status.innerHTML='<span class="swap-dots"><i></i><i></i><i></i></span><span class="swap-bar"></span>';
@@ -302,11 +322,18 @@ function draw(){
    const codes=[["1111111000100001111010010010101111111","1000001001010110101101101101101000001","1011101010011101000111000010001011101","1011101010110000110100001111101011101","1011101010000001101110010000101011101","1000001010001010001001101011101000001","1111111010101010101010101010101111111","0000000010001010100111111001100000000","1011111001111100001110100011101111100","0110010100001001110000010110111100010","0111111010011110010010101001101110011","0101010011000100100001001011110100001","1111111111110100111000110111011111111","0000110101000110111100010100110100010","1110001101001001110001101111010111011","1010110101011011111101000010010110011","1011111101100010100001001111011010111","0011010001101111011011010100110100010","0011101111010101110100101011111010011","0111110001000111000111110001111111001","1010001010000011010100110111011011100","0010000011111000000110010000100001000","0001011001111101101010100111101111011","0100110100111000100010011001000110011","0001011000011101001011101110111010111","1010110000110111100000011100100100100","1001001001111000011011000011110110111","1011000100001110100001100001000110011","1001011100100000010010111111111110111","0000000011011000111111110110100011010","1111111000101111010001000110101010111","1000001010010110111001100010100011011","1011101010110100100101011111111110101","1011101011111111011011110111111011001","1011101011011011110101101000100000111","1000001000101011000111011010111010001","1111111010110011010100101100011011111"],["1111111001111000101100111110001111111","1000001010111000101100101100101000001","1011101010110001000111000010101011101","1011101010110001110111111101001011101","1011101001000010001110010000101011101","1000001000001100101001101110101000001","1111111010101010101010101010101111111","0000000010110001100111011000100000000","1000001011110001001111101111111001110","1011100011011010010011110110010111110","0100011100001100010010100001001000011","0010010001010011100000000010110101001","1011011000101010001110000001101001001","1110110001000001111100010101110101010","1101001101101001110001001111000111011","0010110101000010011110000001111101111","1101111101110000100001001111111110111","1000100100100010011010110111111101010","0111111011000011000010011101001100101","0010010100110100000110100000011000001","0101001000110001010100100111011011100","0001000101111001100101110011000010100","0011001111001001101010100101110111011","1001110110010001100011011000010111011","0000111101111001111101010000101000001","1001100001100010100001010101100101100","1000111001100000011011001011010100111","1011110110110001000010001010100011110","1011111011001110010010111110111110101","0000000011001111111110110111100010010","1111111000000101100111110100101010001","1000001000111001111000100011100010011","1011101001000010100101011101111110101","1011101001110110111000010110011000101","1011101001000001110101101000100001011","1000001000111100000110010010101011001","1111111010100001100010001010100101001"],["11111110001101111110001111111","10000010110100010111001000001","10111010000111000001001011101","10111010111111100100001011101","10111010101111010111001011101","10000010010111010100101000001","11111110101010101010101111111","00000000111111001011100000000","01011110110010010101011011010","01001101100000001111010111110","01111110010100101110111100100","10111101000110010111000001001","00000011110000000011111000110","01110000100100000010001010101","00110011110000101001110101011","01101101001101100001111011110","00111111110111110110100101001","11001000001110000011101010000","11101011010110001001000100001","11001001010111111011011100110","11101110110011100101111110100","00000000101011110110100011100","11111110011001010001101010110","10000010101010001011100011001","10111010101100110101111110011","10111010100111000010000100110","10111010001000010010110110011","10000010100011001001001011101","11111110011011111001100110000"],["11111110100110011001101111111","10000010010000110010101000001","10111010011100101001001011101","10111010001110101100001011101","10111010110110110001101011101","10000010110000000010001000001","11111110101010101010101111111","00000000010010101001100000000","01111111000110011001000110001","00111001010111010011111010001","01100110111011001010011011100","00001101110101110011111111010","01101011111100101100010100111","10101101010011110011111011011","10111111001100100110101100000","01011100011000100011001011011","10100111100001000000000101101","10011000011111111010111111111","10111111001100100110101101100","10001101101001101000101101001","10100011010110101100111110101","00000000101101001011100011011","11111110110010111101101010010","10000010101011010001100011010","10111010100001010100111111100","10111010110001010111110101100","10111010111000111011111111010","10000010111101000011111010010","11111110010101100101011010100"]];
    doc.querySelectorAll('.qr-section').forEach((section,i)=>{
     const rows=codes[i],size=rows.length+8;
-    const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>bit==='1'?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'')).join('');
-    section.querySelector('a').insertAdjacentHTML('beforeend','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" shape-rendering="crispEdges" role="img" aria-label="'+labels[i]+'"><rect width="100%" height="100%" fill="white"/><path fill="black" d="'+path+'"/></svg>');
+    const n=rows.length;
+    const eyes=[[0,0],[n-7,0],[0,n-7]];
+    const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>{
+     const inEye=eyes.some(([u,v])=>x>=u && x<u+7 && y>=v && y<v+7);
+     return bit==='1' && !inEye?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'';
+    })).join('');
+    const frames=eyes.map(([x,y])=>'<g transform="translate('+(x+4)+' '+(y+4)+')"><rect width="7" height="7" rx=".8" fill="#123527"/><rect x="1" y="1" width="5" height="5" rx=".45" fill="#fff8df"/><rect x="2" y="2" width="3" height="3" rx=".5" fill="#6b252a"/></g>').join('');
+    const art='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+labels[i]+'"><rect width="100%" height="100%" fill="#fff8df"/><path shape-rendering="crispEdges" fill="#123527" d="'+path+'"/>'+frames+'</svg>';
+    section.querySelector('a').insertAdjacentHTML('beforeend',art);
     const label=doc.createElement('div');label.className='qr-wall-label';
     ['.qr-tag','.qr-verb','.qr-noun','.qr-sub'].forEach(selector=>label.appendChild(section.querySelector(selector)));
-    label.textContent=['REQUEST A SONG','PARTY CHAT','TIP THE DJ','ADD ON SNAPCHAT'][i];section.appendChild(label);
+    label.textContent=['Request a song','Join party chat','Tip the DJ','Follow on Snapchat'][i];section.appendChild(label);
     if(i>=2){
      section.querySelector('a').href=["https://cash.app/$SunnyAubade", "https://snapchat.com/t/juFcqBGk"][i-2];
      section.querySelector('.qr-wrap img')?.remove();
@@ -388,7 +415,9 @@ function draw(){
    el.style.transform='none';
   }
   const infoH=Math.min(footerH*.23,queueW*.064);
-  fitLeftPanel('.wall-info',base-infoH,split,infoH);
+  const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
+  fitLeftPanel('.wall-info',base-infoH,split,infoH+bottomEdge-base);
+  doc.querySelector('.wall-info').style.paddingBottom=(bottomEdge-base)+'px';
   const info=doc.querySelector('.wall-info');
   let size=Math.max(8,Math.min(queueW*.095,infoH*.78));
   do{
@@ -414,10 +443,10 @@ function draw(){
   const qrY=footerTop,qrH=footerH-infoH-2;
   fitLeftPanel('.qr-footer',qrY,split,qrH);
   const qrWidth=split-L;
-  vars.setProperty('--prompt-size',Math.min(qrWidth*.049,qrH*.14)+'px');
-  const labelSize=Math.min(qrWidth*.045,qrH*.18);
+  vars.setProperty('--prompt-size',Math.min(qrWidth*.061,qrH*.30)+'px');
+  const labelSize=Math.min(qrWidth*.032,qrH*.16);
   vars.setProperty('--label-size',labelSize+'px');
-  vars.setProperty('--code-size',Math.max(8,Math.floor(Math.min(qrWidth*.46,qrH-doc.querySelector('.qr-howto').offsetHeight-labelSize*1.1-35)))+'px');
+  vars.setProperty('--code-size',Math.max(8,Math.floor(Math.min(qrWidth*.33,qrH-labelSize*1.1-34)))+'px');
   const popupTop=Math.max(mediaTop,pxY(top));
   box('#spotlightOverlay',counterX,popupTop,R-counterX,base-popupTop);
 
