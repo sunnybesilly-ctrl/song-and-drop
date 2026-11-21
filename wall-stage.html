@@ -293,14 +293,26 @@ function draw(){
   const footerTop=base-footerH;
   const queueW=split-L;
   const headerW=queueW*.47;
-  function leftEdge(y){
-   const edge=y<pxY(e[1])?[a,e]:[e,d];
-   const [u,v]=edge;
-   const t=Math.max(0,Math.min(1,(y-pxY(u[1]))/(pxY(v[1])-pxY(u[1])||1)));
-   return pxX(u[0])+(pxX(v[0])-pxX(u[0]))*t;
+  // Both panels reach the same neon tube. Only their contents need a safe inset.
+  const rim=insetLoop(pixels,5.1*tube).map(([x,y])=>[(x-x0*innerWidth/100)/unit,(y-y0*innerHeight/100)/unit]);
+  const panelX=Math.min(rim[0][0],rim[4][0],rim[3][0]);
+  const infoW=L+headerW-panelX;
+  function fitLeftPanel(selector,y,right,height){
+   const width=right-panelX;
+   box(selector,panelX,y,width,height);
+   const panel=doc.querySelector(selector);
+   const clip='polygon('+rim.map(([x,py])=>(x-panelX)+'px '+(py-y)+'px').join(',')+')';
+   panel.style.clipPath=panel.style.webkitClipPath=clip;
+   function edgeAt(py){
+    const [u,v]=py<rim[4][1]?[rim[0],rim[4]]:[rim[4],rim[3]];
+    const t=Math.max(0,Math.min(1,(py-u[1])/(v[1]-u[1]||1)));
+    return u[0]+(v[0]-u[0])*t;
+   }
+   const bend=Math.max(y,Math.min(y+height,rim[4][1]));
+   panel.style.paddingLeft=(Math.max(edgeAt(y),edgeAt(bend),edgeAt(y+height))-panelX+8)+'px';
+   panel.style.borderLeftWidth='0';
+   panel.style.borderTopLeftRadius=panel.style.borderBottomLeftRadius='0';
   }
-  const infoX=Math.max(leftEdge(footerTop),leftEdge(base),...(pxY(e[1])>footerTop&&pxY(e[1])<base?[pxX(e[0])]:[]));
-  const infoW=L+headerW-infoX;
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
   const cardH=Math.max(80,Math.min((queueH-16)/1.5,queueW*.27));
@@ -314,7 +326,7 @@ function draw(){
    el.style.transform='none';
   }
   const infoH=footerH;
-  box('.wall-info',infoX,footerTop,infoW,infoH);
+  fitLeftPanel('.wall-info',footerTop,L+headerW,infoH);
   const info=doc.querySelector('.wall-info');
   let size=Math.max(8,Math.min(infoW*.18,infoH*.29));
   do{
@@ -322,10 +334,7 @@ function draw(){
    if(info.scrollHeight<=infoH+1 && info.scrollWidth<=infoW+1)break;
    size-=1;
   }while(size>=8);
-  // Keep the queue vertical at the innermost point of the calibrated side.
-  const bendY=Math.max(queueTop,Math.min(footerTop,pxY(e[1])));
-  const queueX=Math.max(leftEdge(queueTop),leftEdge(bendY),leftEdge(footerTop));
-  box('.ticker-section',queueX,queueTop,split-queueX,queueH);
+  fitLeftPanel('.ticker-section',queueTop,split,queueH);
   const counterX=split+5;
   const counterW=(R-counterX)*.48;
   const counterH=Math.min(counterW*.33,(base-rightRoof)*.17);
