@@ -2712,7 +2712,6 @@ async function rotate() {
   try {
     await auth.authStateReady();
     if (!authorized(auth.currentUser)) return;
-    const started = Date.now();
     lastIssue = '';
     reelStatus.textContent = 'Loading Drop Your Shot…';
     playbackIssue = "";
@@ -2774,7 +2773,7 @@ async function rotate() {
       if (shown.size === roundSize) break;
     }
     if (shown.size) {
-      nextRound = started + roundIntervalMs;
+      nextRound = Date.now() + roundIntervalMs;
     } else lastIssue = (playbackIssue || "Media files could not play") + " · retrying";
   } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
   finally { panel.hidden = true; rotating = false; retryAt = lastIssue ? Date.now() + 10000 : 0; if(lastIssue) reelStatus.textContent=lastIssue; }
