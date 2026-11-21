@@ -351,7 +351,7 @@ function draw(){
    doc.documentElement.dataset.wallQueue='1';
    const win=doc.defaultView,wrapper=doc.getElementById('tickerWrapper');
    const count=doc.getElementById('totalCount');
-   function countLabel(){doc.querySelector('.wall-count .ts-label').innerHTML=(Number(count.textContent)===1?'SONG':'SONGS')+' TONIGHT'}
+   function countLabel(){doc.querySelector('.wall-count .ts-label').innerHTML=(Number(count.textContent)===1?'SONG':'SONGS')}
    countLabel();new MutationObserver(countLabel).observe(count,{childList:true,subtree:true,characterData:true});
    const clock=doc.getElementById('shotClock');
    function progress(){const video=doc.querySelector('.shot-stage video');clock.style.setProperty('--played',(video && video.duration ? Math.min(100,100*video.currentTime/video.duration):0)+'%')}
