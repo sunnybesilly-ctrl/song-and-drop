@@ -2707,8 +2707,9 @@ function present(url, type, name) {
 }
 
 async function rotate() {
-  if (rotating || document.hidden) return;
+  if (rotating || document.hidden || document.documentElement.classList.contains('request-turn')) return;
   rotating = true;
+  panel.dataset.playback='busy';
   try {
     await auth.authStateReady();
     if (!authorized(auth.currentUser)) return;
@@ -2776,7 +2777,7 @@ async function rotate() {
       nextRound = Date.now() + roundIntervalMs;
     } else lastIssue = (playbackIssue || "Media files could not play") + " · retrying";
   } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
-  finally { panel.hidden = true; rotating = false; retryAt = lastIssue ? Date.now() + 10000 : 0; if(lastIssue) reelStatus.textContent=lastIssue; }
+  finally { panel.hidden = true; delete panel.dataset.playback; rotating = false; retryAt = lastIssue ? Date.now() + 10000 : 0; if(lastIssue) reelStatus.textContent=lastIssue; }
 }
 setInterval(tick, 1000);
 </script>
