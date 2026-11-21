@@ -360,7 +360,7 @@ function draw(){
   const base=Math.min(pxY(d[1]),pxY(c[1]));
   const span=R-L;
   const usableHeight=base-pxY(b[1]);
-  const mediaWidth=Math.min(span*0.43,Math.max(span*0.35,usableHeight*0.78));
+  const mediaWidth=Math.min(span*0.49,Math.max(span*0.41,usableHeight*0.78+span*0.06));
   const split=R-mediaWidth;
   const roof=x=>pxY(a[1])+(x-pxX(a[0]))*(pxY(b[1])-pxY(a[1]))/(pxX(b[0])-pxX(a[0]));
   const leftRoof=Math.max(roof(L),roof(split))+8,rightRoof=Math.max(roof(split),roof(R))+8;
