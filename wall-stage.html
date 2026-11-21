@@ -298,57 +298,24 @@ function draw(){
    #stage#stage#stage .wall-info .wall-host{height:auto;letter-spacing:.025em;filter:drop-shadow(0 .042em 0 #925321) drop-shadow(0 .033em 0 #226a44)}
    #stage#stage#stage .wall-date{position:absolute;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-family:var(--font);font-weight:700;color:#ffe294!important;text-shadow:0 .05em #175c39;line-height:1}
    #stage{--ink:#ffeab1}
+   #stage#stage#stage .wall-info{gap:.48em}
+   #stage#stage#stage .wall-info .wall-count{position:static!important;display:flex!important;flex:none;border:0!important;padding:0;background:transparent!important;gap:.16em;--count-size:1em}
+   #stage#stage#stage .wall-info .wall-date{position:static;font-size:.63em;flex:none}
+   #stage#stage#stage .wall-info .wall-count .dot{display:block;width:.48em;height:.48em;border-radius:50%;background:#55ff88!important;animation:footerPulse 1.6s ease-in-out infinite}
+   @keyframes footerPulse{50%{transform:scale(1.18);box-shadow:0 0 .24em #52ff88}}
+   @media(prefers-reduced-motion:reduce){#stage#stage#stage .wall-info .dot{animation:none}}
    #stage#stage#stage .qr-wrap img.brand-code~svg{display:none!important}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
    doc.querySelector('#shotReel .chat-header').textContent='DROP YOUR SHOT';
    doc.querySelector('.header').style.setProperty('display','none','important');
-   doc.querySelector('.qr-howto').innerHTML='<strong>Wanna?</strong><b aria-hidden="true">➜</b><span>Point your camera.<br>Tap the link.</span>';
-   const sections=Array.from(doc.querySelectorAll('.qr-section'));
-   const status=doc.createElement('div');status.className='swap-status';
-   status.innerHTML='<span class="swap-dots"><i></i><i></i><i></i></span><span class="swap-bar"></span>';
-   const started=Date.now();
-   function updateSlots(){
-    const elapsed=Date.now()-started,active=1+Math.floor(elapsed/15000)%3;
-    sections.forEach((section,i)=>section.hidden=i!==0 && i!==active);
-    if(status.parentNode!==sections[active]){
-     sections[active].append(status);
-     status.querySelectorAll('i').forEach((dot,i)=>dot.classList.toggle('on',i===active-1));
-    }
-    status.lastChild.style.transform='scaleX('+(1-elapsed%15000/15000)+')';
-   }
-   updateSlots();doc.defaultView.setInterval(updateSlots,150);
+   doc.querySelector('.qr-footer').remove();
 
    const count=doc.querySelector('.header-right');
    count.classList.add('wall-count');doc.querySelector('#stage>.container').appendChild(count);
    const host=doc.createElement('strong');host.textContent='Sunny’s Jukebox';
-   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){date.textContent=new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric',year:'numeric'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);info.appendChild(host);
-   const labels=['Request a song','Party chat','Tip the DJ','Snapchat'];
-   const codes=[["1111111000100001111010010010101111111","1000001001010110101101101101101000001","1011101010011101000111000010001011101","1011101010110000110100001111101011101","1011101010000001101110010000101011101","1000001010001010001001101011101000001","1111111010101010101010101010101111111","0000000010001010100111111001100000000","1011111001111100001110100011101111100","0110010100001001110000010110111100010","0111111010011110010010101001101110011","0101010011000100100001001011110100001","1111111111110100111000110111011111111","0000110101000110111100010100110100010","1110001101001001110001101111010111011","1010110101011011111101000010010110011","1011111101100010100001001111011010111","0011010001101111011011010100110100010","0011101111010101110100101011111010011","0111110001000111000111110001111111001","1010001010000011010100110111011011100","0010000011111000000110010000100001000","0001011001111101101010100111101111011","0100110100111000100010011001000110011","0001011000011101001011101110111010111","1010110000110111100000011100100100100","1001001001111000011011000011110110111","1011000100001110100001100001000110011","1001011100100000010010111111111110111","0000000011011000111111110110100011010","1111111000101111010001000110101010111","1000001010010110111001100010100011011","1011101010110100100101011111111110101","1011101011111111011011110111111011001","1011101011011011110101101000100000111","1000001000101011000111011010111010001","1111111010110011010100101100011011111"],["1111111001111000101100111110001111111","1000001010111000101100101100101000001","1011101010110001000111000010101011101","1011101010110001110111111101001011101","1011101001000010001110010000101011101","1000001000001100101001101110101000001","1111111010101010101010101010101111111","0000000010110001100111011000100000000","1000001011110001001111101111111001110","1011100011011010010011110110010111110","0100011100001100010010100001001000011","0010010001010011100000000010110101001","1011011000101010001110000001101001001","1110110001000001111100010101110101010","1101001101101001110001001111000111011","0010110101000010011110000001111101111","1101111101110000100001001111111110111","1000100100100010011010110111111101010","0111111011000011000010011101001100101","0010010100110100000110100000011000001","0101001000110001010100100111011011100","0001000101111001100101110011000010100","0011001111001001101010100101110111011","1001110110010001100011011000010111011","0000111101111001111101010000101000001","1001100001100010100001010101100101100","1000111001100000011011001011010100111","1011110110110001000010001010100011110","1011111011001110010010111110111110101","0000000011001111111110110111100010010","1111111000000101100111110100101010001","1000001000111001111000100011100010011","1011101001000010100101011101111110101","1011101001110110111000010110011000101","1011101001000001110101101000100001011","1000001000111100000110010010101011001","1111111010100001100010001010100101001"],["11111110001101111110001111111","10000010110100010111001000001","10111010000111000001001011101","10111010111111100100001011101","10111010101111010111001011101","10000010010111010100101000001","11111110101010101010101111111","00000000111111001011100000000","01011110110010010101011011010","01001101100000001111010111110","01111110010100101110111100100","10111101000110010111000001001","00000011110000000011111000110","01110000100100000010001010101","00110011110000101001110101011","01101101001101100001111011110","00111111110111110110100101001","11001000001110000011101010000","11101011010110001001000100001","11001001010111111011011100110","11101110110011100101111110100","00000000101011110110100011100","11111110011001010001101010110","10000010101010001011100011001","10111010101100110101111110011","10111010100111000010000100110","10111010001000010010110110011","10000010100011001001001011101","11111110011011111001100110000"],["11111110100110011001101111111","10000010010000110010101000001","10111010011100101001001011101","10111010001110101100001011101","10111010110110110001101011101","10000010110000000010001000001","11111110101010101010101111111","00000000010010101001100000000","01111111000110011001000110001","00111001010111010011111010001","01100110111011001010011011100","00001101110101110011111111010","01101011111100101100010100111","10101101010011110011111011011","10111111001100100110101100000","01011100011000100011001011011","10100111100001000000000101101","10011000011111111010111111111","10111111001100100110101101100","10001101101001101000101101001","10100011010110101100111110101","00000000101101001011100011011","11111110110010111101101010010","10000010101011010001100011010","10111010100001010100111111100","10111010110001010111110101100","10111010111000111011111111010","10000010111101000011111010010","11111110010101100101011010100"]];
-   doc.querySelectorAll('.qr-section').forEach((section,i)=>{
-    const rows=codes[i],size=rows.length+8;
-    const n=rows.length;
-    const eyes=[[0,0],[n-7,0],[0,n-7]];
-    const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>{
-     const inEye=eyes.some(([u,v])=>x>=u && x<u+7 && y>=v && y<v+7);
-     return bit==='1' && !inEye?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'';
-    })).join('');
-    const frames=eyes.map(([x,y])=>'<g transform="translate('+(x+4)+' '+(y+4)+')"><rect width="7" height="7" rx=".8" fill="#123527"/><rect x="1" y="1" width="5" height="5" rx=".45" fill="#fff8df"/><rect x="2" y="2" width="3" height="3" rx=".5" fill="#6b252a"/></g>').join('');
-    const art='<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 '+size+' '+size+'" role="img" aria-label="'+labels[i]+'"><rect width="100%" height="100%" fill="#fff8df"/><path shape-rendering="crispEdges" fill="#123527" d="'+path+'"/>'+frames+'</svg>';
-    section.querySelector('a').insertAdjacentHTML('beforeend',art);
-    const label=doc.createElement('div');label.className='qr-wall-label';
-    ['.qr-tag','.qr-verb','.qr-noun','.qr-sub'].forEach(selector=>label.appendChild(section.querySelector(selector)));
-    label.textContent=['♫  Request a song','☀  Join party chat','Cash App · Tip the DJ','Snapchat · @eatitall'][i];section.appendChild(label);
-    if(i>=2){
-     section.querySelector('a').href=["https://cash.app/$SunnyAubade", "https://snapchat.com/t/juFcqBGk"][i-2];
-     const image=section.querySelector('.qr-wrap img');
-     function showBrand(){image.classList.toggle('brand-code',image.naturalWidth>0)}
-     image.addEventListener('load',showBrand);
-     image.addEventListener('error',()=>image.classList.remove('brand-code'));
-     showBrand();
-    }
-   });
+   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'long',timeZone:'America/Chicago'})+' / '+now.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',year:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);info.append(host,count,date);
   }
   if(!doc.documentElement.dataset.wallQueue){
    doc.documentElement.dataset.wallQueue='1';
@@ -391,7 +358,7 @@ function draw(){
   const roof=x=>pxY(a[1])+(x-pxX(a[0]))*(pxY(b[1])-pxY(a[1]))/(pxX(b[0])-pxX(a[0]));
   const leftRoof=Math.max(roof(L),roof(split))+8,rightRoof=Math.max(roof(split),roof(R))+8;
   const footerH=Math.min((split-L)*0.32,(base-leftRoof)*0.39);
-  const footerTop=base-footerH;
+  const footerTop=base-Math.min(footerH*.34,(split-L)*.09);
   const queueW=split-L;
   // Both panels reach the same neon tube. Only their contents need a safe inset.
   const rim=insetLoop(pixels,5.1*tube).map(([x,y])=>[(x-x0*innerWidth/100)/unit,(y-y0*innerHeight/100)/unit]);
@@ -414,7 +381,7 @@ function draw(){
   }
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
-  const cardH=Math.max(80,Math.min((queueH-24)/2.15,queueW*.27));
+  const cardH=Math.max(80,Math.min((base-footerH-queueTop-24)/2.15,queueW*.27));
   const titleSize=Math.max(20,Math.min(queueW*.050,cardH*.21,64));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
@@ -436,39 +403,8 @@ function draw(){
    size-=1;
   }while(size>=8);
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
-  const counterX=split+5;
-  const counterW=R-counterX;
-  const counterH=Math.min(counterW*.24,(base-rightRoof)*.105);
-  const counterY=Math.max(roof(counterX),roof(counterX+counterW))+3;
-  const dateWidth=counterW*.68;
-  const dateX=roof(counterX)<=roof(R)?counterX:R-dateWidth;
-  const dateTop=Math.max(roof(dateX),roof(dateX+dateWidth))+5;
-  const dateHeight=Math.max(0,counterY-dateTop-2);
-  box('.wall-date',dateX,dateTop,dateWidth,dateHeight);
-  const wallDate=doc.querySelector('.wall-date');
-  wallDate.style.visibility=dateHeight>0?'visible':'hidden';
-  let dateSize=Math.min(dateHeight*.88,dateWidth*.155);
-  wallDate.style.fontSize=dateSize+'px';
-  while(dateSize>1 && wallDate.scrollWidth>wallDate.clientWidth){
-   wallDate.style.fontSize=(--dateSize)+'px';
-  }
-  const mediaTop=Math.max(rightRoof,counterY+counterH+5);
-  box('.wall-count',counterX,counterY,counterW,counterH);
-  const counter=doc.querySelector('.wall-count');
-  let countSize=Math.min(counterW*.146,counterH*.74);
-  do{
-   vars.setProperty('--count-size',countSize+'px');
-   if(counter.scrollWidth<=counter.clientWidth && counter.scrollHeight<=counter.clientHeight)break;
-   countSize-=1;
-  }while(countSize>=8);
+  const counterX=split+5,mediaTop=rightRoof;
   box('#chatSection',counterX,mediaTop,R-counterX,base-mediaTop);
-  const qrY=footerTop,qrH=footerH-infoH-2;
-  fitLeftPanel('.qr-footer',qrY,split,qrH);
-  const qrWidth=split-L;
-  vars.setProperty('--prompt-size',Math.min(qrWidth*.061,qrH*.30)+'px');
-  const labelSize=Math.min(qrWidth*.032,qrH*.16);
-  vars.setProperty('--label-size',labelSize+'px');
-  vars.setProperty('--code-size',Math.max(8,Math.floor(Math.min(qrWidth*.33,qrH-labelSize*1.1-34)))+'px');
   const popupTop=Math.max(mediaTop,pxY(top));
   box('#spotlightOverlay',counterX,popupTop,R-counterX,base-popupTop);
 
