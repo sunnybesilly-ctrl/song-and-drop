@@ -256,8 +256,8 @@ function draw(){
    #shotClock{display:block;height:4px;font-size:0;background:linear-gradient(to right,var(--accent) var(--played,0%),#36362c 0)}
    #shotClock[hidden]{display:none}
 
-   #stage#stage#stage #tickerWrapper .card-num{flex:0 0 auto;width:auto;min-width:2.4em;font-size:calc(var(--song-title)*1.42);padding:.08em .18em;background:#171915!important;border:2px solid var(--ticket-color)}
-   #stage#stage#stage #tickerWrapper .card-num *{color:var(--ticket-color)!important;white-space:nowrap;letter-spacing:0}
+   #stage#stage#stage #tickerWrapper .card-num{flex:0 0 auto;width:auto;min-width:2.4em;font-size:calc(var(--song-title)*1.42);padding:.08em .18em;background:var(--ticket-color,#FFD700)!important;border:2px solid #000!important}
+   #stage#stage#stage #tickerWrapper .card-num *{color:#000!important;-webkit-text-fill-color:#000!important;white-space:nowrap;letter-spacing:0}
    #stage #tickerWrapper .card-num .cn-val{font-size:1em;margin:0;line-height:1.05}
    #stage #tickerWrapper .card-num.cn-4 .cn-val{font-size:.8em}
    #stage #tickerWrapper .card-num :is(.cn-label,.cn-of){font-size:.28em;line-height:1.15}
@@ -381,7 +381,12 @@ function draw(){
    new MutationObserver(progress).observe(clock,{childList:true,characterData:true,subtree:true});
    const cacheKey='wall-queue-'+new Date().toLocaleDateString('en-CA');
    function refreshCards(){
-    wrapper.querySelectorAll('.song-card').forEach(card=>card.style.setProperty('--ticket-color',card.style.borderColor || '#ffd34d'));
+    const colors=['#FFD700','#f472b6','#a78bfa','#34d399','#fb923c'];
+    wrapper.querySelectorAll('.song-card').forEach(card=>{
+     const slot=Number(card.querySelector('.cn-val')?.textContent);
+     const color=colors[(Math.max(1,slot || 1)-1)%colors.length];
+     card.style.setProperty('--ticket-color',color);
+    });
 
     wrapper.querySelectorAll('.card-song').forEach(el=>{
      const cleaned=el.textContent.replace(/\s*[(\[]\s*official\s+(?:music\s+)?video\s*[)\]]/ig,'').replace(/\s*[(\[]\s*(?:ft\.?|feat\.?)\s+[^)\]]*[)\]]/ig,'').replace(/\s+(?:ft|feat)\.?(?=\s).*$/i,'').trim();
