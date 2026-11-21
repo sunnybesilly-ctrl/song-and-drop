@@ -255,12 +255,30 @@ function draw(){
    #shotCredit:not(:empty){display:inline-block;margin:0 8px 8px;padding:.16em .4em;border-radius:.25em;background:#151610ed;font-size:clamp(18px,1.8vw,36px)}
    #shotClock{display:block;height:4px;font-size:0;background:linear-gradient(to right,var(--accent) var(--played,0%),#36362c 0)}
    #shotClock[hidden]{display:none}
+
+   #stage#stage#stage #tickerWrapper .card-num{flex:0 0 auto;width:auto;min-width:2.4em;font-size:calc(var(--song-title)*1.42);padding:.08em .18em;background:#171915!important;border:2px solid var(--ticket-color)}
+   #stage#stage#stage #tickerWrapper .card-num *{color:var(--ticket-color)!important;white-space:nowrap;letter-spacing:0}
+   #stage #tickerWrapper .card-num .cn-val{font-size:1em;margin:0;line-height:1.05}
+   #stage #tickerWrapper .card-num.cn-4 .cn-val{font-size:.8em}
+   #stage #tickerWrapper .card-num :is(.cn-label,.cn-of){font-size:.28em;line-height:1.15}
+   #stage#stage#stage .wall-count{padding:0 2%;justify-content:center;gap:calc(var(--count-size)*.25)}
+   #stage#stage#stage .wall-count .total-stat{display:flex;align-items:center;gap:calc(var(--count-size)*.23);padding:0;box-shadow:none!important}
+   #stage#stage#stage .wall-count .ts-label{white-space:nowrap;font-size:calc(var(--count-size)*.47);letter-spacing:.045em}
+   #stage#stage#stage .wall-count .ts-num,#stage#stage#stage .wall-info .wall-host{color:#ffd34d!important}
+   #stage#stage#stage .wall-count .dot{width:calc(var(--count-size)*.23);height:calc(var(--count-size)*.23);background:#53ff99!important}
+   #stage#stage#stage .song-info .card-artist,#stage#stage#stage .qr-row .qr-wall-label{color:#88efad!important}
+   #stage#stage#stage .song-info .card-requester{color:#ffda68!important}
+   #stage#stage#stage .song-info .newest-badge{color:#ff9691!important;background:#431d23!important}
+   #stage#stage#stage .qr-footer .qr-howto{display:flex!important;align-items:baseline;justify-content:center;gap:.6em;padding:2px 4px;line-height:1.1;background:transparent!important;white-space:nowrap}
+   #stage .qr-howto::after{display:none}
+   #stage .qr-howto strong{color:#ffd34d;font-size:var(--prompt-size)}
+   #stage .qr-howto span{color:#fff8e1;font-size:calc(var(--prompt-size)*.72);font-weight:600;letter-spacing:0;text-transform:none}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
    doc.querySelector('#shotReel .chat-header').textContent='DROP YOUR SHOT';
    doc.querySelector('.header').style.setProperty('display','none','important');
-   doc.querySelector('.qr-howto').textContent='wanna??';
+   doc.querySelector('.qr-howto').innerHTML='<strong>Wanna?</strong><span>Point your camera, then tap the link.</span>';
    const sections=Array.from(doc.querySelectorAll('.qr-section'));
    const status=doc.createElement('div');status.className='swap-status';
    status.innerHTML='<span class="swap-dots"><i></i><i></i><i></i></span><span class="swap-bar"></span>';
@@ -299,13 +317,14 @@ function draw(){
    doc.documentElement.dataset.wallQueue='1';
    const win=doc.defaultView,wrapper=doc.getElementById('tickerWrapper');
    const count=doc.getElementById('totalCount');
-   function countLabel(){doc.querySelector('.wall-count .ts-label').innerHTML=(Number(count.textContent)===1?'SONG':'SONGS')+'<br>TONIGHT'}
+   function countLabel(){doc.querySelector('.wall-count .ts-label').innerHTML=(Number(count.textContent)===1?'SONG':'SONGS')+' TONIGHT'}
    countLabel();new MutationObserver(countLabel).observe(count,{childList:true,subtree:true,characterData:true});
    const clock=doc.getElementById('shotClock');
    function progress(){const video=doc.querySelector('.shot-stage video');clock.style.setProperty('--played',(video && video.duration ? Math.min(100,100*video.currentTime/video.duration):0)+'%')}
    new MutationObserver(progress).observe(clock,{childList:true,characterData:true,subtree:true});
    const cacheKey='wall-queue-'+new Date().toLocaleDateString('en-CA');
    function refreshCards(){
+    wrapper.querySelectorAll('.song-card').forEach(card=>card.style.setProperty('--ticket-color',card.style.borderColor || '#ffd34d'));
 
     wrapper.querySelectorAll('.card-song').forEach(el=>{
      const cleaned=el.textContent.replace(/\s*[(\[]\s*official\s+(?:music\s+)?video\s*[)\]]/ig,'').replace(/\s*[(\[]\s*(?:ft\.?|feat\.?)\s+[^)\]]*[)\]]/ig,'').replace(/\s+(?:ft|feat)\.?(?=\s).*$/i,'').trim();
@@ -354,7 +373,7 @@ function draw(){
     return u[0]+(v[0]-u[0])*t;
    }
    const bend=Math.max(y,Math.min(y+height,rim[4][1]));
-   panel.style.paddingLeft=(selector==='.ticker-section' ? 3 : Math.max(edgeAt(y),edgeAt(bend),edgeAt(y+height))-panelX+8)+'px';
+   panel.style.paddingLeft=(Math.max(edgeAt(y),edgeAt(bend),edgeAt(y+height))-panelX+12)+'px';
    panel.style.borderLeftWidth='0';
    panel.style.borderTopLeftRadius=panel.style.borderBottomLeftRadius='0';
   }
@@ -381,13 +400,13 @@ function draw(){
   }while(size>=8);
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
   const counterX=split+5;
-  const counterW=(R-counterX)*.48;
+  const counterW=R-counterX;
   const counterH=Math.min(counterW*.33,(base-rightRoof)*.17);
   const counterY=Math.max(roof(counterX),roof(counterX+counterW))+8;
   const mediaTop=Math.max(rightRoof,counterY+counterH+5);
   box('.wall-count',counterX,counterY,counterW,counterH);
   const counter=doc.querySelector('.wall-count');
-  let countSize=Math.min(counterW*.27,counterH*.86);
+  let countSize=Math.min(counterW*.146,counterH*.74);
   do{
    vars.setProperty('--count-size',countSize+'px');
    if(counter.scrollWidth<=counter.clientWidth && counter.scrollHeight<=counter.clientHeight)break;
@@ -397,9 +416,10 @@ function draw(){
   const qrY=footerTop+infoH+2,qrH=base-qrY;
   fitLeftPanel('.qr-footer',qrY,split,qrH);
   const qrWidth=split-L;
+  vars.setProperty('--prompt-size',Math.min(qrWidth*.049,qrH*.14)+'px');
   const labelSize=Math.min(qrWidth*.045,qrH*.18);
   vars.setProperty('--label-size',labelSize+'px');
-  vars.setProperty('--code-size',Math.max(8,Math.floor(Math.min(qrWidth*.46,qrH-labelSize*1.1-35)))+'px');
+  vars.setProperty('--code-size',Math.max(8,Math.floor(Math.min(qrWidth*.46,qrH-doc.querySelector('.qr-howto').offsetHeight-labelSize*1.1-35)))+'px');
   const popupTop=Math.max(mediaTop,pxY(top));
   box('#spotlightOverlay',counterX,popupTop,R-counterX,base-popupTop);
 
