@@ -353,14 +353,12 @@ function draw(){
   const split=R-mediaWidth;
   const roof=x=>pxY(a[1])+(x-pxX(a[0]))*(pxY(b[1])-pxY(a[1]))/(pxX(b[0])-pxX(a[0]));
   const leftRoof=Math.max(roof(L),roof(split))+8,rightRoof=Math.max(roof(split),roof(R))+8;
-  const footerH=Math.min((split-L)*0.47,(base-leftRoof)*0.55);
+  const footerH=Math.min((split-L)*0.32,(base-leftRoof)*0.39);
   const footerTop=base-footerH;
   const queueW=split-L;
-  const headerW=queueW*.47;
   // Both panels reach the same neon tube. Only their contents need a safe inset.
   const rim=insetLoop(pixels,5.1*tube).map(([x,y])=>[(x-x0*innerWidth/100)/unit,(y-y0*innerHeight/100)/unit]);
   const panelX=Math.min(rim[0][0],rim[4][0],rim[3][0]);
-  const infoW=L+headerW-panelX;
   function fitLeftPanel(selector,y,right,height){
    const width=right-panelX;
    box(selector,panelX,y,width,height);
@@ -379,7 +377,7 @@ function draw(){
   }
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
-  const cardH=Math.max(80,Math.min((queueH-16)/1.5,queueW*.27));
+  const cardH=Math.max(80,Math.min((queueH-24)/2.15,queueW*.27));
   const titleSize=Math.max(20,Math.min(queueW*.050,cardH*.21,64));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
@@ -389,8 +387,8 @@ function draw(){
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  const infoH=Math.min(footerH*.24,queueW*.09);
-  fitLeftPanel('.wall-info',footerTop,split,infoH);
+  const infoH=Math.min(footerH*.23,queueW*.064);
+  fitLeftPanel('.wall-info',base-infoH,split,infoH);
   const info=doc.querySelector('.wall-info');
   let size=Math.max(8,Math.min(queueW*.095,infoH*.78));
   do{
@@ -413,7 +411,7 @@ function draw(){
    countSize-=1;
   }while(countSize>=8);
   box('#chatSection',counterX,mediaTop,R-counterX,base-mediaTop);
-  const qrY=footerTop+infoH+2,qrH=base-qrY;
+  const qrY=footerTop,qrH=footerH-infoH-2;
   fitLeftPanel('.qr-footer',qrY,split,qrH);
   const qrWidth=split-L;
   vars.setProperty('--prompt-size',Math.min(qrWidth*.049,qrH*.14)+'px');
