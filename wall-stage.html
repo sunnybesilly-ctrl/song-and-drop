@@ -328,6 +328,11 @@ function draw(){
    #stage .wall-qr-card[hidden]{display:none!important}
    #stage .wall-qr-card{flex-direction:row;padding:2px;box-sizing:border-box}
    #stage .wall-qr-card>span:last-child{min-width:0;flex:1;overflow-wrap:break-word}
+   #stage #chatMessages{min-height:0;scroll-behavior:auto;overflow-anchor:none;gap:10px;padding:12px}
+   #stage #chatMessages .chat-message{flex-shrink:0;padding:12px 16px}
+   #stage #chatMessages .chat-time{padding:4px 8px}
+   #stage .wall-qr-card--song .wall-qr-label::before{content:'♫';margin-right:.25em;color:#FF9691}
+   #stage .wall-qr-card--chat .wall-qr-label::before{content:'';display:inline-block;width:.6em;height:.45em;margin-right:.3em;border:.09em solid #FF9691;border-radius:.2em .2em .2em 0;vertical-align:.05em}
    #stage .wall-qr-card:focus-visible{outline:2px solid var(--qr-accent);outline-offset:-2px}
    #stage #engageOverlay{display:none}
    #stage#stage#stage .wall-info{gap:.48em}
@@ -371,9 +376,9 @@ function draw(){
    #stage#stage#stage#stage#stage#stage :is(.card-requester,.chat-name,.newest-badge,#shotCredit){color:#FF9691!important}
    #stage#stage#stage#stage#stage#stage :is(.cn-val,.cn-label,.cn-of){color:#07351F!important;text-shadow:none!important}
    #stage#stage#stage#stage#stage#stage .wall-count .ts-label{font-size:calc(var(--count-size)*.56);letter-spacing:0}
-   #stage#stage#stage#stage#stage#stage .chat-time{font-size:clamp(24px,2vw,36px);line-height:1.15}
-   #stage#stage#stage#stage#stage#stage .chat-text{font-size:clamp(32px,2.85vw,55px);line-height:1.22}
-   #stage#stage#stage#stage#stage#stage .chat-name{font-size:clamp(27px,2.35vw,45px);line-height:1.18}
+   #stage#stage#stage#stage#stage#stage .chat-time{font-size:clamp(18px,1.15vw,22px);line-height:1.15}
+   #stage#stage#stage#stage#stage#stage .chat-text{font-size:clamp(24px,1.9vw,36px);line-height:1.24}
+   #stage#stage#stage#stage#stage#stage .chat-name{font-size:clamp(22px,1.65vw,32px);line-height:1.18}
 
    #stage#stage#stage#stage#stage#stage :is(.ticker-section,.wall-info,.wall-count,#chatSection,.song-card){border-radius:0!important}
    #stage#stage#stage#stage#stage#stage .ticker-section{padding-right:0!important}
@@ -418,8 +423,8 @@ function draw(){
    doc.querySelector('.header').style.setProperty('display','none','important');
    const codes=[["1111111000100001111010010010101111111","1000001001010110101101101101101000001","1011101010011101000111000010001011101","1011101010110000110100001111101011101","1011101010000001101110010000101011101","1000001010001010001001101011101000001","1111111010101010101010101010101111111","0000000010001010100111111001100000000","1011111001111100001110100011101111100","0110010100001001110000010110111100010","0111111010011110010010101001101110011","0101010011000100100001001011110100001","1111111111110100111000110111011111111","0000110101000110111100010100110100010","1110001101001001110001101111010111011","1010110101011011111101000010010110011","1011111101100010100001001111011010111","0011010001101111011011010100110100010","0011101111010101110100101011111010011","0111110001000111000111110001111111001","1010001010000011010100110111011011100","0010000011111000000110010000100001000","0001011001111101101010100111101111011","0100110100111000100010011001000110011","0001011000011101001011101110111010111","1010110000110111100000011100100100100","1001001001111000011011000011110110111","1011000100001110100001100001000110011","1001011100100000010010111111111110111","0000000011011000111111110110100011010","1111111000101111010001000110101010111","1000001010010110111001100010100011011","1011101010110100100101011111111110101","1011101011111111011011110111111011001","1011101011011011110101101000100000111","1000001000101011000111011010111010001","1111111010110011010100101100011011111"],["1111111001111000101100111110001111111","1000001010111000101100101100101000001","1011101010110001000111000010101011101","1011101010110001110111111101001011101","1011101001000010001110010000101011101","1000001000001100101001101110101000001","1111111010101010101010101010101111111","0000000010110001100111011000100000000","1000001011110001001111101111111001110","1011100011011010010011110110010111110","0100011100001100010010100001001000011","0010010001010011100000000010110101001","1011011000101010001110000001101001001","1110110001000001111100010101110101010","1101001101101001110001001111000111011","0010110101000010011110000001111101111","1101111101110000100001001111111110111","1000100100100010011010110111111101010","0111111011000011000010011101001100101","0010010100110100000110100000011000001","0101001000110001010100100111011011100","0001000101111001100101110011000010100","0011001111001001101010100101110111011","1001110110010001100011011000010111011","0000111101111001111101010000101000001","1001100001100010100001010101100101100","1000111001100000011011001011010100111","1011110110110001000010001010100011110","1011111011001110010010111110111110101","0000000011001111111110110111100010010","1111111000000101100111110100101010001","1000001000111001111000100011100010011","1011101001000010100101011101111110101","1011101001110110111000010110011000101","1011101001000001110101101000100001011","1000001000111100000110010010101011001","1111111010100001100010001010100101001"],["11111110001101111110001111111","10000010110100010111001000001","10111010000111000001001011101","10111010111111100100001011101","10111010101111010111001011101","10000010010111010100101000001","11111110101010101010101111111","00000000111111001011100000000","01011110110010010101011011010","01001101100000001111010111110","01111110010100101110111100100","10111101000110010111000001001","00000011110000000011111000110","01110000100100000010001010101","00110011110000101001110101011","01101101001101100001111011110","00111111110111110110100101001","11001000001110000011101010000","11101011010110001001000100001","11001001010111111011011100110","11101110110011100101111110100","00000000101011110110100011100","11111110011001010001101010110","10000010101010001011100011001","10111010101100110101111110011","10111010100111000010000100110","10111010001000010010110110011","10000010100011001001001011101","11111110011011111001100110000"],["11111110100110011001101111111","10000010010000110010101000001","10111010011100101001001011101","10111010001110101100001011101","10111010110110110001101011101","10000010110000000010001000001","11111110101010101010101111111","00000000010010101001100000000","01111111000110011001000110001","00111001010111010011111010001","01100110111011001010011011100","00001101110101110011111111010","01101011111100101100010100111","10101101010011110011111011011","10111111001100100110101100000","01011100011000100011001011011","10100111100001000000000101101","10011000011111111010111111111","10111111001100100110101101100","10001101101001101000101101001","10100011010110101100111110101","00000000101101001011100011011","11111110110010111101101010010","10000010101011010001100011010","10111010100001010100111111100","10111010110001010111110101100","10111010111000111011111111010","10000010111101000011111010010","11111110010101100101011010100"]];
    const tiles=[
-    {id:'song',label:'Request a Song',ink:'#000',paper:'#fff'},
-    {id:'chat',label:'Party Chat',ink:'#000',paper:'#fff'},
+    {id:'song',label:'Request a Song',ink:'#07351f',paper:'#fff'},
+    {id:'chat',label:'Party Chat',ink:'#481321',paper:'#fff'},
     {id:'cash',label:'Cash App · Tip',ink:'#000',paper:'#fff',destination:'https://cash.app/$SunnyAubade'},
     {id:'snap',label:'Snapchat',ink:'#000',paper:'#fffc00',destination:'https://snapchat.com/t/X6CaJzGe'}
    ];
@@ -431,11 +436,25 @@ function draw(){
     const rows=codes[index],side=rows.length+8;
     const branded=id==='cash'||id==='snap';
     const eyes=[[0,0],[rows.length-7,0],[0,rows.length-7]];
+    const inEye=(x,y)=>eyes.some(([ex,ey])=>x>=ex&&x<ex+7&&y>=ey&&y<ey+7);
     const modules=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>{
-     if(bit!=='1'||(!branded&&eyes.some(([ex,ey])=>x>=ex&&x<ex+7&&y>=ey&&y<ey+7)))return '';
-     return '<rect x="'+(x+4)+'" y="'+(y+4)+'" width="1" height="1" rx="'+(branded?0:.16)+'"/>';
+     if(bit!=='1'||(!branded&&inEye(x,y)))return '';
+     if(branded)return '<rect x="'+(x+4)+'" y="'+(y+4)+'" width="1" height="1"/>';
+     if(id==='chat')return '<circle cx="'+(x+4.5)+'" cy="'+(y+4.5)+'" r=".51"/>';
+     // Join consecutive modules into rounded bars, like a record's grooves.
+     if(x>0&&row[x-1]==='1'&&!inEye(x-1,y))return '';
+     let length=1;
+     while(x+length<row.length&&row[x+length]==='1'&&!inEye(x+length,y))length++;
+     return '<rect x="'+(x+4)+'" y="'+(y+4)+'" width="'+length+'" height="1" rx=".45"/>';
     })).join('');
-    const finders=branded?'':eyes.map(([x,y])=>'<rect x="'+(x+4)+'" y="'+(y+4)+'" width="7" height="7" rx="1.1" fill="#07351f"/><rect x="'+(x+5)+'" y="'+(y+5)+'" width="5" height="5" rx=".55" fill="#fff"/><rect x="'+(x+6)+'" y="'+(y+6)+'" width="3" height="3" rx=".45" fill="#07351f"/>').join('');
+    const finders=branded?'':eyes.map(([x,y])=>{
+     const outerRadius=id==='song'?2:1.4;
+     const innerRadius=id==='song'?1.25:.7;
+     const center=id==='song'
+      ?'<circle cx="'+(x+7.5)+'" cy="'+(y+7.5)+'" r="1.5" fill="'+ink+'"/>'
+      :'<rect x="'+(x+6)+'" y="'+(y+6)+'" width="3" height="3" rx=".65" fill="'+ink+'"/>';
+     return '<rect x="'+(x+4)+'" y="'+(y+4)+'" width="7" height="7" rx="'+outerRadius+'" fill="'+ink+'"/><rect x="'+(x+5)+'" y="'+(y+5)+'" width="5" height="5" rx="'+innerRadius+'" fill="#fff"/>'+center;
+    }).join('');
     const original=originalLinks[index];
     const link=doc.createElement('a');
     link.className='wall-qr-card wall-qr-card--'+id;
@@ -487,6 +506,37 @@ function draw(){
    const count=doc.getElementById('totalCount');
    function countLabel(){doc.querySelector('.wall-count .ts-label').innerHTML=(Number(count.textContent)===1?'SONG':'SONGS')}
    countLabel();new MutationObserver(countLabel).observe(count,{childList:true,subtree:true,characterData:true});
+   const chat=doc.getElementById('chatMessages');
+   const reel=doc.getElementById('shotReel');
+   const renderChat=win.displayChat;
+   let chatSignature='',pauseUntil=Date.now()+4000,scrollPosition=0,lastTick=Date.now();
+   win.displayChat=function(messages,autoScroll){
+    const signature=JSON.stringify(messages);
+    if(signature===chatSignature)return;
+    const first=!chatSignature;
+    chatSignature=signature;
+    renderChat(messages,autoScroll);
+    scrollPosition=first?0:chat.scrollTop;
+    chat.scrollTop=scrollPosition;
+    pauseUntil=Date.now()+5000;
+   };
+   // Resume the reading position after media, and let each end remain readable.
+   win.setInterval(()=>{
+    const now=Date.now(),elapsed=Math.min(now-lastTick,150);
+    lastTick=now;
+    if(doc.hidden||!reel.hidden||!chat.clientHeight||now<pauseUntil)return;
+    const maximum=chat.scrollHeight-chat.clientHeight;
+    if(maximum<=0){scrollPosition=0;return}
+    if(scrollPosition>=maximum-1){
+     scrollPosition=0;
+     chat.scrollTop=0;
+     pauseUntil=now+4000;
+     return;
+    }
+    scrollPosition=Math.min(maximum,scrollPosition+elapsed*.022);
+    chat.scrollTop=scrollPosition;
+    if(scrollPosition>=maximum-1)pauseUntil=now+5000;
+   },80);
    const clock=doc.getElementById('shotClock');
    function progress(){const video=doc.querySelector('.shot-stage video');clock.style.setProperty('--played',(video && video.duration ? Math.min(100,100*video.currentTime/video.duration):0)+'%')}
    new MutationObserver(progress).observe(clock,{childList:true,characterData:true,subtree:true});
