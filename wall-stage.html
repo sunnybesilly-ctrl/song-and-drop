@@ -252,7 +252,7 @@ function draw(){
    #stage #spotlightCard>*{font-size:clamp(10px,min(6cqw,9cqh),52px);line-height:1.05;max-width:100%;overflow-wrap:anywhere}
    #stage #spotlightCard .spotlight-glow{display:none}
    #stage #shotReel .shot-caption{position:absolute;inset:auto 0 0;display:block;background:transparent;padding:0;pointer-events:none}
-   #shotCredit:not(:empty){display:inline-block;margin:0 8px 8px;padding:.16em .4em;border-radius:.25em;background:#151610ed;font-size:clamp(18px,1.8vw,36px)}
+   #shotCredit:not(:empty){display:inline-block;margin:0 8px 8px;padding:.16em .4em;border-radius:.25em;background:#151610ed;font-size:clamp(28px,2.8vw,56px)}
    #shotClock{display:block;height:4px;font-size:0;background:linear-gradient(to right,var(--accent) var(--played,0%),#36362c 0)}
    #shotClock[hidden]{display:none}
 
@@ -458,10 +458,10 @@ function draw(){
    el.style.transform='none';
   }
   const counterX=split+5,mediaTop=rightRoof;
-  const countWidth=(R-counterX)*.58;
+  const countWidth=(R-counterX)*.42;
   const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
   const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
-  const countHeight=Math.max(12,mediaTop-countY-4);
+  const countHeight=Math.max(12,Math.min((R-counterX)*.095,mediaTop-countY-8));
   box('.wall-count',countX,countY,countWidth,countHeight);
   const count=doc.querySelector('.wall-count');
   let countSize=Math.min(countHeight*.72,countWidth*.20);
@@ -469,7 +469,7 @@ function draw(){
   while(countSize>8 && (count.scrollWidth>count.clientWidth || count.scrollHeight>count.clientHeight)){
    count.style.setProperty('--count-size',(--countSize)+'px');
   }
-  const mediaStart=mediaTop;
+  const mediaStart=Math.max(Math.max(roof(counterX),roof(R))+3,countY+countHeight+4);
   const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
   fitLeftPanel('.wall-info',base-infoH,split,infoH+bottomEdge-base);
