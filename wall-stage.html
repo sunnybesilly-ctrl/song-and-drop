@@ -369,6 +369,10 @@ function draw(){
    #stage#stage#stage#stage#stage#stage .wall-info{grid-template-columns:1.35fr 1fr;column-gap:.35em}
    #stage#stage#stage#stage#stage#stage #tickerWrapper .song-info{min-width:0}
    #stage#stage#stage#stage#stage#stage #tickerWrapper :is(.card-song,.card-artist,.card-requester){white-space:normal;overflow-wrap:anywhere;line-height:1.18}
+
+   #stage#stage#stage#stage#stage#stage .wall-count .ts-num{font-size:var(--count-size);line-height:1;font-weight:700}
+   #stage#stage#stage#stage#stage#stage .wall-count .ts-label{font-size:calc(var(--count-size)*.52);line-height:1;letter-spacing:0}
+   #stage#stage#stage#stage#stage#stage .wall-count .dot{width:calc(var(--count-size)*.42);height:calc(var(--count-size)*.42);flex:none}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -489,13 +493,14 @@ function draw(){
    el.style.transform='none';
   }
   const counterX=split,mediaTop=rightRoof;
-  const countWidth=(R-counterX)*.42;
+  const countWidth=(R-counterX)*.58;
   const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
   const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
-  const countHeight=Math.max(12,Math.min((R-counterX)*.095,mediaTop-countY-8));
+  const countHeight=Math.max(12,mediaTop-countY-4);
   box('.wall-count',countX,countY,countWidth,countHeight);
   const count=doc.querySelector('.wall-count');
-  let countSize=Math.min(countHeight*.72,countWidth*.20);
+  count.style.setProperty('padding','0','important');
+  let countSize=Math.min(countHeight*.90,countWidth*.27);
   count.style.setProperty('--count-size',countSize+'px');
   while(countSize>8 && (count.scrollWidth>count.clientWidth || count.scrollHeight>count.clientHeight)){
    count.style.setProperty('--count-size',(--countSize)+'px');
