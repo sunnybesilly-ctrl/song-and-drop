@@ -779,6 +779,12 @@ html, body { margin: 0; padding: 0; width: 100%; height: 100% !important; overfl
   .jukebox-hem::before { animation: none; }
 }
 
+#stage #spotlightCard{flex-direction:row;align-items:center;text-align:left}
+#stage #spotlightCard #requestCover{width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:.4em;flex:none}
+#spotlightCard .request-details{min-width:0;flex:1}
+#spotlightPosition,#spotlightArtist,#spotlightRequester{font-size:.62em;line-height:1.2}
+#spotlightSong{font-weight:900;line-height:1.08;margin:.1em 0}
+#spotlightCard .request-details{font-size:clamp(20px,3vw,56px)}
 </style>
 <link rel="apple-touch-icon" href="https://sunnybesilly-ctrl.github.io/song-queue/icon-lite.png?v=20261111-links2">
 <link rel="icon" type="image/png" href="https://sunnybesilly-ctrl.github.io/song-queue/icon-lite.png?v=20261111-links2">
@@ -993,14 +999,13 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
   ====================================================== -->
   <div class="spotlight-overlay" id="spotlightOverlay">
     <div class="spotlight-card" id="spotlightCard">
-      <div class="spotlight-glow"></div>
-      <div class="spotlight-position"  id="spotlightPosition"></div>
-      <div class="spotlight-requester" id="spotlightRequester"></div>
-      <div class="spotlight-wants">wants to hear</div>
-      <div class="spotlight-song"      id="spotlightSong"></div>
-      <div class="spotlight-artist"    id="spotlightArtist"></div>
-      <div class="spotlight-hype"      id="spotlightHype"></div>
-      <div class="spotlight-queue-pos" id="spotlightQueuePos"></div>
+      <img id="requestCover" alt="" hidden>
+      <section class="request-details">
+        <div id="spotlightPosition"></div>
+        <div id="spotlightSong"></div>
+        <div id="spotlightArtist"></div>
+        <div id="spotlightRequester"></div>
+      </section>
     </div>
   </div>
 
@@ -1626,32 +1631,31 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
     // Shows requester name, song, artist, with fireworks.
     // spotlight duration: 3000ms = 3 seconds. Change to adjust.
     // ==========================================================
-    const SPOTLIGHT_SHOWN = new Set();
-    function showSpotlight(song, position, total) {
-      const name   = decodeEntities(getSongName(song)) || "Someone";
-      const title  = decodeEntities(getSongTitle(song)) || "";
-      const artist = decodeEntities(getArtist(song))   || "";
-      const key    = title + name;
-      if (SPOTLIGHT_SHOWN.has(key)) return;
-      SPOTLIGHT_SHOWN.add(key);
+    const pendingRequests = [];
+    let spotlightActive = false;
+    function showSpotlight(song, position) {
+      pendingRequests.push({song, position});
+      if (!spotlightActive) presentRequest();
+    }
+    function presentRequest() {
+      const request = pendingRequests.shift();
+      if (!request) { spotlightActive = false; return; }
+      spotlightActive = true;
+      const {song, position} = request;
       const overlay = document.getElementById("spotlightOverlay");
-      const card    = document.getElementById("spotlightCard");
-      if (!overlay||!card) return;
-      const p    = CARD_PALETTES[position % CARD_PALETTES.length];
-      const hype = HYPE_CAPTIONS[Math.floor(Math.random()*HYPE_CAPTIONS.length)];
-      document.getElementById("spotlightPosition").textContent  = "🎵 NEW REQUEST";
-      document.getElementById("spotlightRequester").textContent = name.split(" ")[0];
-      document.getElementById("spotlightRequester").style.color = p.name;
-      document.getElementById("spotlightSong").textContent      = title;
-      document.getElementById("spotlightArtist").textContent    = "by " + artist;
-      document.getElementById("spotlightArtist").style.color    = p.artist;
-      document.getElementById("spotlightHype").textContent      = hype;
-      document.getElementById("spotlightQueuePos").textContent  = "You're song #"+(position+1)+" of "+total;
-      document.getElementById("spotlightQueuePos").style.color = p.border;
-      card.style.borderColor = p.border;
-      card.style.background  = "rgba(0,0,0,0.9)";
-      card.style.boxShadow   = "0 0 80px "+p.border+"44";
-      card.querySelector(".spotlight-glow").style.color = p.border;
+      const card = document.getElementById("spotlightCard");
+      const cover = document.getElementById("requestCover");
+      const videoId = getVideoId(song);
+      cover.hidden = !videoId;
+      cover.onerror = () => { cover.hidden = true; };
+      if (videoId) cover.src = "https://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+      else cover.removeAttribute("src");
+      const name = decodeEntities(getSongName(song));
+      document.getElementById("spotlightPosition").textContent = "NEW REQUEST · #" + (position + 1);
+      document.getElementById("spotlightSong").textContent = decodeEntities(getSongTitle(song));
+      document.getElementById("spotlightArtist").textContent = decodeEntities(getArtist(song));
+      document.getElementById("spotlightRequester").textContent = name ? "From " + name : "";
+      card.style.borderColor = CARD_PALETTES[position % CARD_PALETTES.length].border;
       // Pick a random entry animation so it appears from a different spot each time
       const entries = ["enter-left","enter-right","enter-drop","enter-pop","enter-up"];
       card.classList.remove(...entries);
@@ -1661,8 +1665,13 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
       overlay.classList.add("visible");
       // Celebration effect — rotates between confetti / fireworks / celebration
       setTimeout(()=>{ if (typeof window.celebrate==="function") window.celebrate(); }, 400);
-      // spotlight duration: 3000ms = 3 seconds. Change to adjust.
-      setTimeout(()=>{ overlay.classList.add("leaving"); setTimeout(()=>overlay.classList.remove("visible","leaving"),700); }, 3000);
+      setTimeout(() => {
+        overlay.classList.add("leaving");
+        setTimeout(() => {
+          overlay.classList.remove("visible", "leaving");
+          presentRequest();
+        }, 700);
+      }, 12000);
     }
 
     // ==========================================================
@@ -1860,7 +1869,7 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
       fetchSongQueue();
       fetchChatMessages();
       if (typeof launchFirework === "function" && window.allSongs) {
-        if (window.allSongs.length > lastSongCount && lastSongCount > 0) {
+        if (window.allSongs.length > lastSongCount && !firstSongLoad) {
           // New song added — fireworks!
           const x = Math.random()*STAGE_W*0.5 + STAGE_W*0.1;
           const y = Math.random()*STAGE_H*0.35 + 80;
@@ -1868,8 +1877,7 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
           setTimeout(()=>launchFirework(x+120, y-80),  180);
           setTimeout(()=>launchFirework(x-100, y+50),  360);
           setTimeout(()=>launchFirework(STAGE_W*0.5, 150), 540);
-          const newest = window.allSongs[window.allSongs.length-1];
-          if (newest) showSpotlight(newest, window.allSongs.length-1, window.allSongs.length);
+          window.allSongs.slice(lastSongCount).forEach((song, offset) => showSpotlight(song, lastSongCount + offset));
         }
         lastSongCount = window.allSongs.length;
       }
