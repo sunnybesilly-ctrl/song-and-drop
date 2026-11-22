@@ -472,12 +472,6 @@ function draw(){
    const panel=doc.querySelector(selector);
    const clip='polygon('+rim.map(([x,py])=>(x-panelX)+'px '+(py-y)+'px').join(',')+')';
    panel.style.clipPath=panel.style.webkitClipPath=clip;
-   function edgeAt(py){
-    const [u,v]=py<rim[4][1]?[rim[0],rim[4]]:[rim[4],rim[3]];
-    const t=Math.max(0,Math.min(1,(py-u[1])/(v[1]-u[1]||1)));
-    return u[0]+(v[0]-u[0])*t;
-   }
-   const bend=Math.max(y,Math.min(y+height,rim[4][1]));
    panel.style.paddingLeft=(L-panelX+12)+'px';
    panel.style.borderLeftWidth='0';
    panel.style.borderTopLeftRadius=panel.style.borderBottomLeftRadius='0';
