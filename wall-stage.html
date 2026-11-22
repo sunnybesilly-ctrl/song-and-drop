@@ -363,6 +363,12 @@ function draw(){
    #stage#stage#stage#stage#stage#stage .chat-time{font-size:clamp(24px,2vw,36px);line-height:1.15}
    #stage#stage#stage#stage#stage#stage .chat-text{font-size:clamp(36px,3.2vw,62px);line-height:1.22}
    #stage#stage#stage#stage#stage#stage .chat-name{font-size:clamp(30px,2.6vw,50px);line-height:1.18}
+
+   #stage#stage#stage#stage#stage#stage :is(.ticker-section,.wall-info,.wall-count,#chatSection,.footer-request,.song-card){border-radius:0!important}
+   #stage#stage#stage#stage#stage#stage .ticker-section{padding-right:0!important}
+   #stage#stage#stage#stage#stage#stage .wall-info{grid-template-columns:1.35fr 1fr;column-gap:.35em}
+   #stage#stage#stage#stage#stage#stage #tickerWrapper .song-info{min-width:0}
+   #stage#stage#stage#stage#stage#stage #tickerWrapper :is(.card-song,.card-artist,.card-requester){white-space:normal;overflow-wrap:anywhere;line-height:1.18}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -472,7 +478,7 @@ function draw(){
     return u[0]+(v[0]-u[0])*t;
    }
    const bend=Math.max(y,Math.min(y+height,rim[4][1]));
-   panel.style.paddingLeft=(Math.max(edgeAt(y),edgeAt(bend),edgeAt(y+height))-panelX+12)+'px';
+   panel.style.paddingLeft=(L-panelX+12)+'px';
    panel.style.borderLeftWidth='0';
    panel.style.borderTopLeftRadius=panel.style.borderBottomLeftRadius='0';
   }
@@ -488,7 +494,7 @@ function draw(){
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  const counterX=split+5,mediaTop=rightRoof;
+  const counterX=split,mediaTop=rightRoof;
   const countWidth=(R-counterX)*.42;
   const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
   const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
@@ -501,6 +507,15 @@ function draw(){
    count.style.setProperty('--count-size',(--countSize)+'px');
   }
   const mediaStart=Math.max(Math.max(roof(counterX),roof(R))+3,countY+countHeight+4);
+  const counterTop=Math.min(roof(counterX),roof(R))+3;
+  box('.wall-count',counterX,counterTop,R-counterX,mediaStart-counterTop);
+  const roofClip='polygon(0 '+Math.max(0,roof(counterX)+3-counterTop)+'px,100% '+Math.max(0,roof(R)+3-counterTop)+'px,100% 100%,0 100%)';
+  count.style.clipPath=count.style.webkitClipPath=roofClip;
+  count.style.setProperty('padding-top',Math.max(0,countY-counterTop)+'px','important');
+  count.style.setProperty('padding-bottom',Math.max(0,mediaStart-countY-countHeight)+'px','important');
+  const emptySide=R-counterX-countWidth;
+  count.style.setProperty('padding-left',(countX-counterX+6)+'px','important');
+  count.style.setProperty('padding-right',(emptySide-(countX-counterX)+6)+'px','important');
   const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
   fitLeftPanel('.wall-info',base-infoH,split,infoH+bottomEdge-base);
@@ -515,13 +530,13 @@ function draw(){
   }while(size>=8);
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
   const requestWidth=R-counterX;
-  const requestHeight=base-mediaStart;
+  const requestHeight=bottomEdge-mediaStart;
   const requestSize=Math.floor(Math.min(requestWidth*.82,requestHeight*.73));
   const request=doc.querySelector('.footer-request');
   request.style.setProperty('--request-size',requestSize+'px');
   request.style.fontSize=Math.min(requestHeight*.11,requestWidth*.085)+'px';
   box('.footer-request',counterX,mediaStart,requestWidth,requestHeight);
-  box('#chatSection',counterX,mediaStart,requestWidth,base-mediaStart);
+  box('#chatSection',counterX,mediaStart,requestWidth,bottomEdge-mediaStart);
   const popupTop=Math.max(roof(L),roof(split))+8;
   fitLeftPanel('#spotlightOverlay',popupTop,split,footerTop-popupTop);
 
