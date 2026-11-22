@@ -399,30 +399,36 @@ function draw(){
    const tiles=[
     {id:'song',label:'Request a Song',ink:'#152719',paper:'#fff5d6'},
     {id:'chat',label:'Party Chat',ink:'#351721',paper:'#f3fff1'},
-    {id:'cash',label:'Cash App · Tip',ink:'#000',paper:'#fff'},
-    {id:'snap',label:'Snapchat',ink:'#000',paper:'#fffc00',fallbackUrl:'https://snapchat.com/t/juFcqBGk'}
+    {id:'cash',label:'Cash App · Tip',ink:'#000',paper:'#fff',destination:'https://cash.app/$SunnyAubade'},
+    {id:'snap',label:'Snapchat',ink:'#000',paper:'#fffc00',destination:'https://snapchat.com/t/X6CaJzGe'}
    ];
    const originalLinks=Array.from(doc.querySelectorAll('.qr-section a'));
    const qrStrip=doc.createElement('nav');
    qrStrip.className='wall-qr-strip';
    qrStrip.setAttribute('aria-label','Party QR codes');
-   tiles.forEach(({id,label,ink,paper,fallbackUrl},index)=>{
+   tiles.forEach(({id,label,ink,paper,destination},index)=>{
     const rows=codes[index],side=rows.length+8;
     const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>bit==='1'?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'')).join('');
     const original=originalLinks[index];
     const link=doc.createElement('a');
     link.className='wall-qr-card wall-qr-card--'+id;
-    link.href=fallbackUrl||original.href;
+    link.href=destination||original.href;
     link.target='_blank';
     link.rel='noopener noreferrer';
     link.innerHTML='<span class="wall-qr-face" aria-hidden="true"><svg viewBox="0 0 '+side+' '+side+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="'+paper+'"/><path fill="'+ink+'" d="'+path+'"/></svg></span><span>'+label+'</span>';
+    if(id==='snap'){
+     const fallback=doc.createElement('img');
+     fallback.alt='Snapchat QR code';
+     fallback.src='https://api.qrserver.com/v1/create-qr-code/?size=400x400&margin=20&data='+encodeURIComponent(destination);
+     link.firstElementChild.replaceChildren(fallback);
+    }
     if(id==='cash'||id==='snap'){
      const image=original.querySelector('img');
      image.classList.remove('qr-code');
      function showBrand(){
       const loaded=image.complete&&image.naturalWidth>0;
       image.hidden=!loaded;
-      link.href=loaded?original.href:(fallbackUrl||original.href);
+
      }
      image.addEventListener('load',showBrand);
      image.addEventListener('error',showBrand);
