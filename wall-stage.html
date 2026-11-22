@@ -373,6 +373,10 @@ function draw(){
    #stage#stage#stage#stage#stage#stage .wall-count .ts-num{font-size:var(--count-size);line-height:1;font-weight:700}
    #stage#stage#stage#stage#stage#stage .wall-count .ts-label{font-size:calc(var(--count-size)*.52);line-height:1;letter-spacing:0}
    #stage#stage#stage#stage#stage#stage .wall-count .dot{width:calc(var(--count-size)*.42);height:calc(var(--count-size)*.42);flex:none}
+
+   #stage#stage#stage#stage#stage#stage#stage #tickerWrapper,
+   #stage#stage#stage#stage#stage#stage#stage #tickerWrapper .ticker-dupe{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;box-sizing:border-box}
+   #stage#stage#stage#stage#stage#stage#stage #tickerWrapper .song-card{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box;padding-left:var(--queue-content-inset)!important;border-left-width:0!important;border-radius:0!important}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -528,6 +532,9 @@ function draw(){
    size-=1;
   }while(size>=8);
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
+  const queuePanel=doc.querySelector('.ticker-section');
+  queuePanel.style.setProperty('--queue-content-inset',(L-panelX+12)+'px');
+  queuePanel.style.setProperty('padding-left','0','important');
   const requestWidth=R-counterX;
   const requestHeight=bottomEdge-mediaStart;
   const requestSize=Math.floor(Math.min(requestWidth*.82,requestHeight*.73));
