@@ -306,7 +306,7 @@ function draw(){
    #stage#stage#stage #shotCredit:not(:empty){max-width:94%;box-sizing:border-box;text-align:right;overflow-wrap:anywhere}
    #stage#stage#stage .footer-request{display:none;flex-direction:column;gap:.15em;background:#102820}
    .request-turn #stage#stage#stage .footer-request{display:flex}
-   .request-turn #stage #chatSection,.request-turn #stage #spotlightOverlay{visibility:hidden!important}
+   .request-turn #stage #chatSection{visibility:hidden!important}
    #stage .footer-request span br{display:none}
    #stage .footer-request span br::after{content:' '}
 
@@ -522,8 +522,8 @@ function draw(){
   request.style.fontSize=Math.min(requestHeight*.11,requestWidth*.085)+'px';
   box('.footer-request',counterX,mediaStart,requestWidth,requestHeight);
   box('#chatSection',counterX,mediaStart,requestWidth,base-mediaStart);
-  const popupTop=Math.max(mediaStart,pxY(top));
-  box('#spotlightOverlay',counterX,popupTop,R-counterX,base-popupTop);
+  const popupTop=Math.max(roof(L),roof(split))+8;
+  fitLeftPanel('#spotlightOverlay',popupTop,split,footerTop-popupTop);
 
  }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
