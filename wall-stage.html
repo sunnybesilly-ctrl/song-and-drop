@@ -326,6 +326,11 @@ function draw(){
    @keyframes footerPulse{50%{transform:scale(1.18);box-shadow:0 0 .24em #52ff88}}
    @media(prefers-reduced-motion:reduce){#stage#stage#stage .wall-info .dot{animation:none}}
    #stage#stage#stage .qr-wrap img.brand-code~svg{display:none!important}
+   #stage#stage#stage .wall-info{display:grid;grid-template-columns:1.35fr 1fr;align-items:center;justify-items:center;gap:.25em;text-align:center}
+   #stage#stage#stage .wall-info .footer-brand{align-items:center;font-size:.85em;min-width:0}
+   #stage#stage#stage .wall-info>.wall-date{margin:0;font-size:.85em;justify-self:center}
+   #stage#stage#stage .container>.wall-count{display:flex!important;border:2px solid #d9b85f!important;border-radius:12px;background:#102a22!important;justify-content:center;align-items:center;padding:2px 6px}
+
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -350,10 +355,10 @@ function draw(){
    const count=doc.querySelector('.header-right');
    count.classList.add('wall-count');doc.querySelector('#stage>.container').appendChild(count);
    const host=doc.createElement('strong');host.textContent='Sunny’s Jukebox';
-   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',year:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);const brand=doc.createElement('div');
+   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);const brand=doc.createElement('div');
    brand.className='footer-brand';
    brand.append(host);
-   info.append(brand,date,count);
+   info.append(brand,date);
    info.parentNode.appendChild(requestLink);
    const reel=doc.getElementById('shotReel');
    let nextCode=0;
@@ -452,6 +457,17 @@ function draw(){
    el.style.transform='none';
   }
   const counterX=split+5,mediaTop=rightRoof;
+  const countWidth=(R-counterX)*.58;
+  const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
+  const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
+  const countHeight=Math.max(12,mediaTop-countY-4);
+  box('.wall-count',countX,countY,countWidth,countHeight);
+  const count=doc.querySelector('.wall-count');
+  let countSize=Math.min(countHeight*.72,countWidth*.20);
+  count.style.setProperty('--count-size',countSize+'px');
+  while(countSize>8 && (count.scrollWidth>count.clientWidth || count.scrollHeight>count.clientHeight)){
+   count.style.setProperty('--count-size',(--countSize)+'px');
+  }
   const mediaStart=mediaTop;
   const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
