@@ -299,9 +299,11 @@ function draw(){
    #stage#stage#stage .wall-date{position:absolute;display:flex;align-items:center;justify-content:center;white-space:nowrap;font-family:var(--font);font-weight:700;color:#ffe294!important;text-shadow:0 .05em #175c39;line-height:1}
    #stage{--ink:#ffeab1}
    #stage#stage#stage .wall-info{justify-content:space-between;padding-right:.22em}
-   #stage#stage#stage .wall-info .wall-count{margin-left:6%!important}
+   #stage#stage#stage .wall-info .wall-count{margin-left:0!important}
    #stage#stage#stage .footer-brand{display:flex;flex-direction:column;align-items:flex-end;justify-content:center;font-size:.64em}
-   #stage#stage#stage .footer-brand .wall-date{margin:0;font-size:.68em}
+   #stage#stage#stage .wall-info>.wall-date{position:static;margin:0;font-size:.83em}
+   #stage#stage#stage #shotReel .shot-caption{text-align:right}
+   #stage#stage#stage #shotCredit:not(:empty){max-width:94%;box-sizing:border-box;text-align:right;overflow-wrap:anywhere}
    #stage#stage#stage .footer-request{display:none;flex-direction:column;gap:.15em;background:#102820}
    .request-turn #stage#stage#stage .footer-request{display:flex}
    .request-turn #stage #chatSection,.request-turn #stage #spotlightOverlay{visibility:hidden!important}
@@ -350,8 +352,8 @@ function draw(){
    const host=doc.createElement('strong');host.textContent='Sunny’s Jukebox';
    host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',year:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);const brand=doc.createElement('div');
    brand.className='footer-brand';
-   brand.append(host,date);
-   info.append(count,brand);
+   brand.append(host);
+   info.append(brand,date,count);
    info.parentNode.appendChild(requestLink);
    const reel=doc.getElementById('shotReel');
    let nextCode=0;
