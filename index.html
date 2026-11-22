@@ -1367,7 +1367,8 @@ var STAGE_W = 1920, STAGE_H = 1080, LITE_MAX_CARDS = 30;
       if (!(period > 0)) { wrapper.style.animation = ""; return; }
       _tickerPeriod = period;
 
-      const pxs   = Math.min(TICKER_MAX_PXS, Math.max(TICKER_MIN_PXS, period / TICKER_LOOP_SECONDS)) * (2 / 3);
+      const speedFactor = document.documentElement.dataset.wallQueue ? 0.9 : 2 / 3;
+      const pxs   = Math.min(TICKER_MAX_PXS, Math.max(TICKER_MIN_PXS, period / TICKER_LOOP_SECONDS)) * speedFactor;
       const dur   = period / pxs;
       const startPx = ((keepPx % period) + period) % period;
       wrapper.style.setProperty("--tp", (-period) + "px");
