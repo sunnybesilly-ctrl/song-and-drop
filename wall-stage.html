@@ -310,6 +310,10 @@ function draw(){
    #stage#stage#stage .container>.wall-count{inset:auto;transform:none!important;display:flex!important;padding:0;border:0;background:transparent!important}
    #stage#stage#stage .container>.wall-count .dot{width:calc(var(--count-size)*.43);height:calc(var(--count-size)*.43);border-radius:50%;animation:footerPulse 1.6s ease-in-out infinite}
    @media(prefers-reduced-motion:reduce){#stage#stage#stage .container>.wall-count .dot{animation:none}}
+   #stage .wall-masthead{position:absolute;z-index:4;display:flex;justify-content:center;align-items:center;background:#102A1B;border:2px solid #FFD34D;border-bottom:3px solid #EF5350}
+   #stage .wall-masthead .wall-host{position:static;flex:none;line-height:1;white-space:nowrap}
+   #stage#stage#stage#stage#stage#stage#stage#stage .wall-info .wall-count{width:auto!important;height:auto!important;border:0!important;background:transparent!important}
+   #stage#stage#stage#stage#stage#stage .wall-info{grid-template-columns:auto minmax(0,1fr)}
    #stage .wall-qr-strip{position:absolute;z-index:9600;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:7px;padding:5px 8px;background:#0b2015;border-top:3px solid #EF5350;border-bottom:3px solid #FFD34D;border-right:3px solid #49D985}
    #stage .wall-qr-card{--qr-accent:#FFD34D;--qr-edge:#997123;--qr-surface:#30250f;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:0;gap:.27em;color:var(--qr-accent);text-decoration:none;font-size:var(--qr-label-size);font-weight:700;line-height:1.08;text-align:center;border:1px solid var(--qr-edge);border-radius:.55em;background:var(--qr-surface)}
    #stage .wall-qr-card--song,#stage .wall-qr-card--chat{background:linear-gradient(155deg,var(--qr-surface),#0d1e15 75%);box-shadow:inset 0 0 0 2px #0b2015,inset 0 0 0 3px var(--qr-edge)}
@@ -441,12 +445,13 @@ function draw(){
    doc.querySelector('.qr-footer').remove();
 
    const count=doc.querySelector('.header-right');
-   count.classList.add('wall-count');doc.querySelector('#stage>.container').appendChild(count);
+   count.classList.add('wall-count');
+   const stageContainer=doc.querySelector('#stage>.container');
+   const masthead=doc.createElement('div');
+   masthead.className='wall-masthead';
+   stageContainer.appendChild(masthead);
    const host=doc.createElement('strong');host.textContent='Sunny’s Jukebox';
-   host.className='wall-host';doc.querySelector('#stage>.container').appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);host.parentNode.appendChild(date);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);const brand=doc.createElement('div');
-   brand.className='footer-brand';
-   brand.append(host);
-   info.append(brand,date);
+   host.className='wall-host';masthead.appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);info.append(count,date);
 
   }
   if(!doc.documentElement.dataset.wallQueue){
@@ -520,8 +525,11 @@ function draw(){
   const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
   const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
   const countHeight=Math.max(12,mediaTop-countY-4);
+  const info=doc.querySelector('.wall-info');
+  const count=info.querySelector('.wall-count');
+  // Measure the count at its original dimensions before placing it in the footer.
+  info.parentNode.appendChild(count);
   box('.wall-count',countX,countY,countWidth,countHeight);
-  const count=doc.querySelector('.wall-count');
   count.style.setProperty('padding','0','important');
   let countSize=Math.min(countHeight*.90,countWidth*.27);
   count.style.setProperty('--count-size',countSize+'px');
@@ -530,17 +538,24 @@ function draw(){
   }
   const mediaStart=Math.max(Math.max(roof(counterX),roof(R))+3,countY+countHeight+4);
   const counterTop=Math.min(roof(counterX),roof(R))+3;
-  box('.wall-count',counterX,counterTop,R-counterX,mediaStart-counterTop);
+  info.prepend(count);
+  const masthead=doc.querySelector('.wall-masthead');
+  const host=masthead.firstElementChild;
+  box('.wall-masthead',counterX,counterTop,R-counterX,mediaStart-counterTop);
   const roofClip='polygon(0 '+Math.max(0,roof(counterX)+3-counterTop)+'px,100% '+Math.max(0,roof(R)+3-counterTop)+'px,100% 100%,0 100%)';
-  count.style.clipPath=count.style.webkitClipPath=roofClip;
-  count.style.setProperty('padding-top',Math.max(0,countY-counterTop)+'px','important');
-  count.style.setProperty('padding-bottom',Math.max(0,mediaStart-countY-countHeight)+'px','important');
+  masthead.style.clipPath=masthead.style.webkitClipPath=roofClip;
+  masthead.style.setProperty('padding-top',Math.max(0,countY-counterTop)+'px','important');
+  masthead.style.setProperty('padding-bottom',Math.max(0,mediaStart-countY-countHeight)+'px','important');
   const emptySide=R-counterX-countWidth;
-  count.style.setProperty('padding-left',(countX-counterX+6)+'px','important');
-  count.style.setProperty('padding-right',(emptySide-(countX-counterX)+6)+'px','important');
-  const infoH=Math.min(footerH*.34,queueW*.09);
+  masthead.style.setProperty('padding-left',(countX-counterX+6)+'px','important');
+  masthead.style.setProperty('padding-right',(emptySide-(countX-counterX)+6)+'px','important');
+  const titleWidth=countWidth-12;
+  let titleSize=Math.max(8,Math.min(countHeight*.9,titleWidth*.15));
+  host.style.fontSize=titleSize+'px';
+  while(titleSize>8&&host.offsetWidth>titleWidth)host.style.fontSize=(--titleSize)+'px';
+  const infoH=Math.max(Math.min(footerH*.34,queueW*.09),countSize+8);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
-  const qrHeight=Math.max(1,Math.min(span*.18,(base-mediaStart)*.39));
+  const qrHeight=Math.max(1,Math.min(span*.18,(base-mediaStart)*.39,(base-infoH-mediaStart)*.55));
   const footerTop=base-infoH;
   const qrTop=footerTop-qrHeight;
   const qrStrip=doc.querySelector('.wall-qr-strip');
@@ -554,7 +569,6 @@ function draw(){
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',Math.max(20,Math.min(queueW*.060,cardH*.26,76))+'px');
   fitLeftPanel('.wall-info',footerTop,split,bottomEdge-footerTop);
-  const info=doc.querySelector('.wall-info');
   info.style.paddingBottom=(bottomEdge-base)+'px';
 
   let size=Math.max(8,Math.min(queueW*.095,infoH*.91));
