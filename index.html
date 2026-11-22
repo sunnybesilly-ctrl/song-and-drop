@@ -2631,14 +2631,19 @@ function present(url, type, name) {
     let timer;
     let plays = 0;
     let prompt;
+    let finished = false;
     function finish(success) {
+      if (finished) return;
+      finished = true;
       prompt?.remove();
       clearTimeout(timer);
       media.onerror = media.onload = media.onplaying = media.onended = media.ontimeupdate = null;
       if (video) media.pause();
-      media.removeAttribute("src");
-      if (video) media.load();
-      media.remove();
+      if (!success || media.parentNode !== stage) {
+        media.removeAttribute("src");
+        if (video) media.load();
+        media.remove();
+      }
       resolve(success);
     }
     function timeout(ms, success = false) {
@@ -2656,7 +2661,14 @@ function present(url, type, name) {
       credit.textContent = uploader ? (document.documentElement.dataset.wallQueue ? uploader : "Posted by: " + uploader) : "";
       clock.hidden = !video;
       if (video) updateClock();
-      if (media.parentNode !== stage) stage.replaceChildren(media);
+      if (media.parentNode !== stage) {
+        const previous = Array.from(stage.querySelectorAll("video,img"));
+        stage.replaceChildren(media);
+        previous.forEach(element => {
+          element.removeAttribute("src");
+          if (element.tagName === "VIDEO") element.load();
+        });
+      }
       panel.hidden = false;
     }
     media.onerror = () => {
@@ -2669,7 +2681,6 @@ function present(url, type, name) {
       media.defaultMuted = true;
       media.playsInline = true;
       media.preload = "auto";
-      reveal();
       media.onplaying = () => { prompt?.remove(); prompt=null; reveal(); timeout(20000); };
       media.ontimeupdate = () => { updateClock(); timeout(20000); };
       function startVideo() {
@@ -2677,6 +2688,7 @@ function present(url, type, name) {
         attempt?.catch(error => {
           if (error.name !== "NotAllowedError") { playbackIssue = "Video playback: " + error.name; finish(false); return; }
           playbackIssue = "Projector requires a playback gesture";
+          panel.hidden = false;
           if (!prompt) {
             prompt = document.createElement("button");
             prompt.textContent = "Play video";
@@ -2772,7 +2784,6 @@ async function rotate() {
           preferVideo = item.type !== "video";
         }
       } catch (error) { console.warn("Drop Your Shot media unavailable", error); }
-      panel.hidden = true;
       if (shown.size === roundSize) break;
     }
     if (shown.size) {
@@ -2784,6 +2795,12 @@ async function rotate() {
     panel.dataset.chatUntil = String(chatUntil);
     nextRound = chatUntil + (document.documentElement.dataset.wallQueue ? 14000 : 0);
     panel.hidden = true;
+    stage.querySelectorAll("video,img").forEach(element => {
+      if (element.tagName === "VIDEO") element.pause();
+      element.removeAttribute("src");
+      if (element.tagName === "VIDEO") element.load();
+      element.remove();
+    });
     delete panel.dataset.playback;
     rotating = false;
     retryAt = lastIssue ? Date.now() + 10000 : 0;
