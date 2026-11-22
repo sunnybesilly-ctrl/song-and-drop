@@ -2559,7 +2559,8 @@ const status = login.querySelector('[role="status"]');
 const reelStatus = document.getElementById("reelStatus");
 const roundIntervalMs = 30000;
 const roundSize = 15;
-let nextRound = performance.timeOrigin + roundIntervalMs;
+let nextRound = Date.now() + roundIntervalMs;
+panel.dataset.chatUntil = String(nextRound);
 let lastIssue = "";
 let retryAt = 0;
 let pairedUid = localStorage.getItem('pairedProjectorUid');
@@ -2778,7 +2779,17 @@ async function rotate() {
       nextRound = Date.now() + roundIntervalMs;
     } else lastIssue = (playbackIssue || "Media files could not play") + " · retrying";
   } catch (error) { lastIssue = "Media feed: " + (error.code || "connection failed"); console.warn("Drop Your Shot rotation unavailable", error); }
-  finally { panel.hidden = true; delete panel.dataset.playback; rotating = false; retryAt = lastIssue ? Date.now() + 10000 : 0; if(lastIssue) reelStatus.textContent=lastIssue; }
+  finally {
+    const chatUntil = Date.now() + roundIntervalMs;
+    panel.dataset.chatUntil = String(chatUntil);
+    nextRound = chatUntil + (document.documentElement.dataset.wallQueue ? 14000 : 0);
+    panel.hidden = true;
+    delete panel.dataset.playback;
+    rotating = false;
+    retryAt = lastIssue ? Date.now() + 10000 : 0;
+    if(lastIssue) reelStatus.textContent=lastIssue;
+    else tick();
+  }
 }
 setInterval(tick, 1000);
 </script>
