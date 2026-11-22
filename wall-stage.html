@@ -419,8 +419,8 @@ function draw(){
    #stage .wall-qr-strip{grid-template-columns:minmax(0,1fr)}
    #stage .qr-viewport{overflow:hidden;min-width:0;min-height:0}
    #stage .qr-track{display:flex;width:100%;height:100%}
-   #stage .qr-track>.wall-qr-card{box-sizing:border-box;flex:0 0 100%;flex-direction:row;gap:4%;padding:4px}
-   #stage .qr-track .wall-qr-label{order:0;max-width:48%;font-size:1.35em;white-space:normal}
+   #stage .qr-track>.wall-qr-card{box-sizing:border-box;flex:0 0 50%;flex-direction:column;gap:4px;padding:4px}
+   #stage .qr-track .wall-qr-label{order:0;max-width:100%;font-size:1em;white-space:nowrap}
    #stage .qr-track .wall-qr-face{order:1;flex:none}
    `;
    doc.head.appendChild(css);
@@ -505,12 +505,12 @@ function draw(){
    viewport.appendChild(track);
    qrStrip.appendChild(viewport);
    function holdCard(){
-    Array.from(track.children).forEach((card,i)=>{card.tabIndex=i===0?0:-1;card.setAttribute('aria-hidden',String(i!==0));});
+    Array.from(track.children).forEach((card,i)=>{card.tabIndex=i<2?0:-1;card.setAttribute('aria-hidden',String(i>=2));});
     doc.defaultView.setTimeout(()=>{
      if(doc.hidden || track.contains(doc.activeElement)){holdCard();return;}
      const duration=doc.defaultView.matchMedia('(prefers-reduced-motion: reduce)').matches?0:550;
      track.style.transition='transform '+duration+'ms ease-in-out';
-     track.style.transform='translateX(-100%)';
+     track.style.transform='translateX(-50%)';
      doc.defaultView.setTimeout(()=>{
       track.style.transition='none';
       track.appendChild(track.firstElementChild);
