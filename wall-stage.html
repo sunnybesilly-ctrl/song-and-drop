@@ -326,6 +326,18 @@ function draw(){
    @keyframes footerPulse{50%{transform:scale(1.18);box-shadow:0 0 .24em #52ff88}}
    @media(prefers-reduced-motion:reduce){#stage#stage#stage .wall-info .dot{animation:none}}
    #stage#stage#stage .qr-wrap img.brand-code~svg{display:none!important}
+   #stage#stage#stage#stage#stage #tickerWrapper .card-song{display:block;-webkit-line-clamp:unset;overflow:visible;text-overflow:clip;line-height:1.15;letter-spacing:0}
+   #stage#stage#stage#stage#stage #tickerWrapper .thumbnail{width:30%;flex-basis:30%}
+   #stage#stage#stage#stage#stage #tickerWrapper .card-num{min-width:1.85em;padding:.1em .12em}
+   #stage#stage#stage#stage#stage #tickerWrapper :is(.card-artist,.card-requester){font-size:calc(var(--song-title)*.70);line-height:1.18;letter-spacing:0}
+   #stage#stage#stage#stage#stage #tickerWrapper .song-card{gap:12px}
+   #stage#stage#stage#stage#stage #chatSection :is(.chat-text,.chat-name){font-size:clamp(34px,3vw,58px);line-height:1.2;white-space:normal;overflow-wrap:anywhere}
+   #stage#stage#stage#stage#stage .chat-header-row{flex-wrap:wrap}
+   #stage#stage#stage#stage#stage :is(.card-song,.card-artist,.card-requester,.cn-val,.cn-label,.cn-of,.chat-text,.chat-name,.chat-time,#shotCredit,#reelStatus){
+    background-image:none!important;-webkit-text-fill-color:currentColor!important;
+    -webkit-text-stroke:0!important;text-shadow:0 .025em .04em #000000!important;filter:none!important;
+   }
+
    /* Rounded lettering with a black contour and a narrow glossy highlight. */
    #stage#stage#stage#stage :is(.wall-host,.wall-date,.ts-num,.ts-label,.card-song,.card-artist,.card-requester,.cn-val,.cn-label,.cn-of,.newest-badge,.chat-header,.chat-msg,.chat-name,.chat-text,.chat-time,#shotCredit,#reelStatus,.footer-request>span){
     font-family:WallFredoka,ui-rounded,"Trebuchet MS",sans-serif!important;
@@ -467,7 +479,7 @@ function draw(){
   const queueTop=Math.min(roof(L),roof(split))+5;
   const queueH=footerTop-queueTop;
   const cardH=Math.max(80,Math.min((base-footerH-queueTop-24)/2.15,queueW*.27));
-  const titleSize=Math.max(20,Math.min(queueW*.050,cardH*.21,64));
+  const titleSize=Math.max(20,Math.min(queueW*.060,cardH*.26,76));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',titleSize+'px');
