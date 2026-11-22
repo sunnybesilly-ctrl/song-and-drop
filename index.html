@@ -2653,7 +2653,7 @@ function present(url, type, name) {
     function reveal() {
       const credit = document.getElementById("shotCredit");
       const uploader = typeof name === "string" ? name.trim() : "";
-      credit.textContent = uploader ? "Posted by: " + uploader : "";
+      credit.textContent = uploader ? (document.documentElement.dataset.wallQueue ? uploader : "Posted by: " + uploader) : "";
       clock.hidden = !video;
       if (video) updateClock();
       if (media.parentNode !== stage) stage.replaceChildren(media);
