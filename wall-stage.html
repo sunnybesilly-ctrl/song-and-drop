@@ -377,6 +377,15 @@ function draw(){
    #stage#stage#stage#stage#stage#stage#stage #tickerWrapper,
    #stage#stage#stage#stage#stage#stage#stage #tickerWrapper .ticker-dupe{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;box-sizing:border-box}
    #stage#stage#stage#stage#stage#stage#stage #tickerWrapper .song-card{width:100%!important;max-width:none!important;margin-left:0!important;margin-right:0!important;box-sizing:border-box;padding-left:var(--queue-content-inset)!important;border-left-width:0!important;border-radius:0!important}
+
+   /* Green and gold frames with red separators for the projected fields. */
+   #stage#stage#stage#stage#stage#stage#stage#stage .ticker-section{border-color:#FFD34D!important;background:#071C12!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage #tickerWrapper .song-card{border-top:3px solid #EF5350!important;border-bottom:3px solid #FFD34D!important;border-right:3px solid #49D985!important;background:#0A2418!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage #chatSection{border:3px solid #49D985!important;border-top-color:#FFD34D!important;border-bottom-color:#EF5350!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage #chatSection .chat-header{border-bottom:3px solid #EF5350!important;background:#102A1B!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage .wall-info{border-top:3px solid #EF5350!important;border-bottom:3px solid #FFD34D!important;border-right:3px solid #49D985!important;background:#102A1B!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage .wall-count{border-color:#FFD34D!important;border-bottom:3px solid #EF5350!important;background:#102A1B!important}
+   #stage#stage#stage#stage#stage#stage#stage#stage .footer-request{border:3px solid #49D985!important;border-top-color:#FFD34D!important;border-bottom-color:#EF5350!important}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
