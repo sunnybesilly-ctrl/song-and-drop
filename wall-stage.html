@@ -310,12 +310,19 @@ function draw(){
    #stage#stage#stage .container>.wall-count{inset:auto;transform:none!important;display:flex!important;padding:0;border:0;background:transparent!important}
    #stage#stage#stage .container>.wall-count .dot{width:calc(var(--count-size)*.43);height:calc(var(--count-size)*.43);border-radius:50%;animation:footerPulse 1.6s ease-in-out infinite}
    @media(prefers-reduced-motion:reduce){#stage#stage#stage .container>.wall-count .dot{animation:none}}
-   #stage .wall-qr-strip{position:absolute;z-index:9600;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:center;gap:6px;padding:4px 8px;background:#102a1b;border-top:3px solid #EF5350;border-bottom:3px solid #FFD34D;border-right:3px solid #49D985}
-   #stage .wall-qr-card{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;gap:.18em;color:#FFD34D;text-decoration:none;font-size:var(--qr-label-size);font-weight:700;line-height:1.08;text-align:center}
-   #stage .wall-qr-card:nth-child(2){color:#88EFAD}
-   #stage .wall-qr-card:nth-child(3){color:#FF9691}
-   #stage .wall-qr-card svg{display:block;width:var(--qr-size);height:var(--qr-size);max-width:100%;border-radius:3%;box-shadow:0 0 0 2px currentColor}
-   #stage .wall-qr-card:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+   #stage .wall-qr-strip{position:absolute;z-index:9600;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));align-items:stretch;gap:7px;padding:5px 8px;background:#0b2015;border-top:3px solid #EF5350;border-bottom:3px solid #FFD34D;border-right:3px solid #49D985}
+   #stage .wall-qr-card{--qr-accent:#FFD34D;--qr-edge:#997123;--qr-surface:#30250f;display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;min-height:0;gap:.27em;color:var(--qr-accent);text-decoration:none;font-size:var(--qr-label-size);font-weight:700;line-height:1.08;text-align:center;border:1px solid var(--qr-edge);border-radius:.55em;background:var(--qr-surface)}
+   #stage .wall-qr-card--song,#stage .wall-qr-card--chat{background:linear-gradient(155deg,var(--qr-surface),#0d1e15 75%);box-shadow:inset 0 0 0 2px #0b2015,inset 0 0 0 3px var(--qr-edge)}
+   #stage .wall-qr-card--chat{--qr-accent:#a6f5b6;--qr-edge:#4f966b;--qr-surface:#193d2c}
+   #stage .wall-qr-card--cash{--qr-accent:#53f491;--qr-edge:#23663a;--qr-surface:#122b1c}
+   #stage .wall-qr-card--snap{--qr-accent:#fffc72;--qr-edge:#776525;--qr-surface:#2a2610}
+   #stage .wall-qr-face{display:block;position:relative;flex:none;width:var(--qr-size);height:var(--qr-size);max-width:100%;box-shadow:0 0 0 2px var(--qr-accent)}
+   #stage .wall-qr-face svg,#stage .wall-qr-face img{position:absolute;inset:0;display:block;width:100%;height:100%}
+   #stage .wall-qr-face img{background:#fff;object-fit:contain}
+   #stage .wall-qr-card--cash .wall-qr-face img{padding:7%}
+   #stage .wall-qr-card--snap .wall-qr-face img{background:#fffc00}
+   #stage .wall-qr-face img[hidden]{display:none!important}
+   #stage .wall-qr-card:focus-visible{outline:2px solid var(--qr-accent);outline-offset:-2px}
    #stage #engageOverlay{display:none}
    #stage#stage#stage .wall-info{gap:.48em}
    #stage#stage#stage .wall-info .wall-count{position:static!important;display:flex!important;flex:none;border:0!important;padding:0;background:transparent!important;gap:.16em;--count-size:1em}
@@ -389,21 +396,39 @@ function draw(){
    doc.querySelector('#shotReel .chat-header').textContent='DROP YOUR SHOT';
    doc.querySelector('.header').style.setProperty('display','none','important');
    const codes=[["1111111000100001111010010010101111111","1000001001010110101101101101101000001","1011101010011101000111000010001011101","1011101010110000110100001111101011101","1011101010000001101110010000101011101","1000001010001010001001101011101000001","1111111010101010101010101010101111111","0000000010001010100111111001100000000","1011111001111100001110100011101111100","0110010100001001110000010110111100010","0111111010011110010010101001101110011","0101010011000100100001001011110100001","1111111111110100111000110111011111111","0000110101000110111100010100110100010","1110001101001001110001101111010111011","1010110101011011111101000010010110011","1011111101100010100001001111011010111","0011010001101111011011010100110100010","0011101111010101110100101011111010011","0111110001000111000111110001111111001","1010001010000011010100110111011011100","0010000011111000000110010000100001000","0001011001111101101010100111101111011","0100110100111000100010011001000110011","0001011000011101001011101110111010111","1010110000110111100000011100100100100","1001001001111000011011000011110110111","1011000100001110100001100001000110011","1001011100100000010010111111111110111","0000000011011000111111110110100011010","1111111000101111010001000110101010111","1000001010010110111001100010100011011","1011101010110100100101011111111110101","1011101011111111011011110111111011001","1011101011011011110101101000100000111","1000001000101011000111011010111010001","1111111010110011010100101100011011111"],["1111111001111000101100111110001111111","1000001010111000101100101100101000001","1011101010110001000111000010101011101","1011101010110001110111111101001011101","1011101001000010001110010000101011101","1000001000001100101001101110101000001","1111111010101010101010101010101111111","0000000010110001100111011000100000000","1000001011110001001111101111111001110","1011100011011010010011110110010111110","0100011100001100010010100001001000011","0010010001010011100000000010110101001","1011011000101010001110000001101001001","1110110001000001111100010101110101010","1101001101101001110001001111000111011","0010110101000010011110000001111101111","1101111101110000100001001111111110111","1000100100100010011010110111111101010","0111111011000011000010011101001100101","0010010100110100000110100000011000001","0101001000110001010100100111011011100","0001000101111001100101110011000010100","0011001111001001101010100101110111011","1001110110010001100011011000010111011","0000111101111001111101010000101000001","1001100001100010100001010101100101100","1000111001100000011011001011010100111","1011110110110001000010001010100011110","1011111011001110010010111110111110101","0000000011001111111110110111100010010","1111111000000101100111110100101010001","1000001000111001111000100011100010011","1011101001000010100101011101111110101","1011101001110110111000010110011000101","1011101001000001110101101000100001011","1000001000111100000110010010101011001","1111111010100001100010001010100101001"],["11111110001101111110001111111","10000010110100010111001000001","10111010000111000001001011101","10111010111111100100001011101","10111010101111010111001011101","10000010010111010100101000001","11111110101010101010101111111","00000000111111001011100000000","01011110110010010101011011010","01001101100000001111010111110","01111110010100101110111100100","10111101000110010111000001001","00000011110000000011111000110","01110000100100000010001010101","00110011110000101001110101011","01101101001101100001111011110","00111111110111110110100101001","11001000001110000011101010000","11101011010110001001000100001","11001001010111111011011100110","11101110110011100101111110100","00000000101011110110100011100","11111110011001010001101010110","10000010101010001011100011001","10111010101100110101111110011","10111010100111000010000100110","10111010001000010010110110011","10000010100011001001001011101","11111110011011111001100110000"],["11111110100110011001101111111","10000010010000110010101000001","10111010011100101001001011101","10111010001110101100001011101","10111010110110110001101011101","10000010110000000010001000001","11111110101010101010101111111","00000000010010101001100000000","01111111000110011001000110001","00111001010111010011111010001","01100110111011001010011011100","00001101110101110011111111010","01101011111100101100010100111","10101101010011110011111011011","10111111001100100110101100000","01011100011000100011001011011","10100111100001000000000101101","10011000011111111010111111111","10111111001100100110101101100","10001101101001101000101101001","10100011010110101100111110101","00000000101101001011100011011","11111110110010111101101010010","10000010101011010001100011010","10111010100001010100111111100","10111010110001010111110101100","10111010111000111011111111010","10000010111101000011111010010","11111110010101100101011010100"]];
-   const labels=['Request a Song','Join Party Chat','Tip the DJ','Snapchat'];
-   const destinations=Array.from(doc.querySelectorAll('.qr-section a'),link=>link.href);
-   destinations[3]='https://snapchat.com/t/juFcqBGk';
+   const tiles=[
+    {id:'song',label:'Request a Song',ink:'#152719',paper:'#fff5d6'},
+    {id:'chat',label:'Party Chat',ink:'#351721',paper:'#f3fff1'},
+    {id:'cash',label:'Cash App · Tip',ink:'#000',paper:'#fff'},
+    {id:'snap',label:'Snapchat',ink:'#000',paper:'#fffc00',fallbackUrl:'https://snapchat.com/t/juFcqBGk'}
+   ];
+   const originalLinks=Array.from(doc.querySelectorAll('.qr-section a'));
    const qrStrip=doc.createElement('nav');
    qrStrip.className='wall-qr-strip';
    qrStrip.setAttribute('aria-label','Party QR codes');
-   codes.forEach((rows,index)=>{
-    const side=rows.length+8;
+   tiles.forEach(({id,label,ink,paper,fallbackUrl},index)=>{
+    const rows=codes[index],side=rows.length+8;
     const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>bit==='1'?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'')).join('');
+    const original=originalLinks[index];
     const link=doc.createElement('a');
-    link.className='wall-qr-card';
-    link.href=destinations[index];
+    link.className='wall-qr-card wall-qr-card--'+id;
+    link.href=fallbackUrl||original.href;
     link.target='_blank';
     link.rel='noopener noreferrer';
-    link.innerHTML='<svg viewBox="0 0 '+side+' '+side+'" shape-rendering="crispEdges" aria-hidden="true"><rect width="100%" height="100%" fill="white"/><path fill="black" d="'+path+'"/></svg><span>'+labels[index]+'</span>';
+    link.innerHTML='<span class="wall-qr-face" aria-hidden="true"><svg viewBox="0 0 '+side+' '+side+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="'+paper+'"/><path fill="'+ink+'" d="'+path+'"/></svg></span><span>'+label+'</span>';
+    if(id==='cash'||id==='snap'){
+     const image=original.querySelector('img');
+     image.classList.remove('qr-code');
+     function showBrand(){
+      const loaded=image.complete&&image.naturalWidth>0;
+      image.hidden=!loaded;
+      link.href=loaded?original.href:(fallbackUrl||original.href);
+     }
+     image.addEventListener('load',showBrand);
+     image.addEventListener('error',showBrand);
+     link.firstElementChild.appendChild(image);
+     showBrand();
+    }
     qrStrip.appendChild(link);
    });
    doc.querySelector('#stage').appendChild(qrStrip);
@@ -509,14 +534,14 @@ function draw(){
   count.style.setProperty('padding-right',(emptySide-(countX-counterX)+6)+'px','important');
   const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
-  const qrHeight=Math.max(1,Math.min(span*.155,(base-mediaStart)*.32));
+  const qrHeight=Math.max(1,Math.min(span*.18,(base-mediaStart)*.39));
   const qrTop=base-qrHeight;
   const footerTop=qrTop-infoH;
   const qrStrip=doc.querySelector('.wall-qr-strip');
   fitLeftPanel('.wall-qr-strip',qrTop,R,bottomEdge-qrTop);
   qrStrip.style.paddingBottom=(bottomEdge-base+4)+'px';
-  qrStrip.style.setProperty('--qr-size',Math.floor(Math.min(qrHeight*.75,span*.21))+'px');
-  qrStrip.style.setProperty('--qr-label-size',Math.max(1,Math.min(qrHeight*.12,span*.025))+'px');
+  qrStrip.style.setProperty('--qr-size',Math.floor(Math.min(qrHeight*.72,span*.19))+'px');
+  qrStrip.style.setProperty('--qr-label-size',Math.max(1,Math.min(qrHeight*.13,span*.025))+'px');
 
   const queueH=footerTop-queueTop;
   const cardH=Math.max(80,Math.min((queueH-24)/1.85,queueW*.27));
