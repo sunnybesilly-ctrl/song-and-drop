@@ -397,6 +397,20 @@ function draw(){
    #stage#stage#stage#stage#stage#stage#stage#stage #chatSection .chat-header{border-bottom:3px solid #EF5350!important;background:#102A1B!important}
    #stage#stage#stage#stage#stage#stage#stage#stage .wall-info{border-top:3px solid #EF5350!important;border-bottom:3px solid #FFD34D!important;border-right:3px solid #49D985!important;background:#102A1B!important}
    #stage#stage#stage#stage#stage#stage#stage#stage .wall-count{border-color:#FFD34D!important;border-bottom:3px solid #EF5350!important;background:#102A1B!important}
+
+   /* QR artwork and labels share one framed tile. The white quiet zone stays clear. */
+   #stage .wall-qr-card{flex-direction:column;gap:6px;padding:8px 5px;justify-content:center;border:2px solid var(--qr-accent);border-radius:12px;background:#0b291b;box-shadow:inset 0 -4px #a52e34}
+   #stage .wall-qr-card>span.wall-qr-label{order:-1;flex:none;width:100%;font-size:var(--qr-label-size);font-weight:700;line-height:1.12;white-space:nowrap;letter-spacing:-.02em;color:var(--qr-accent);text-shadow:0 2px #733a22!important}
+   #stage .wall-qr-face{box-shadow:0 0 0 3px var(--qr-accent);border-radius:8px;overflow:hidden}
+   #stage .wall-masthead{box-sizing:border-box;padding:0!important;overflow:hidden}
+   #stage .wall-masthead .wall-host{display:contents}
+   #stage .wall-masthead .wall-host>span{position:absolute;display:block;box-sizing:border-box;white-space:nowrap;text-align:center;line-height:1;font-weight:700;letter-spacing:-.035em;color:#FFD34D;-webkit-text-fill-color:currentColor;text-shadow:0 3px #9d3a2d!important}
+   #stage .wall-masthead .wall-host>span:first-child{color:#88EFAD}
+   #stage#stage#stage#stage#stage#stage#stage#stage#stage .wall-info{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;justify-items:center}
+   #stage#stage#stage#stage#stage#stage#stage#stage#stage .wall-info .wall-count{position:static!important;inset:auto!important;margin:0!important;padding:0!important;min-width:0;max-width:100%;height:auto!important;transform:none!important;border:0!important;align-self:center;line-height:1.15;gap:10px}
+   #stage#stage#stage#stage#stage#stage#stage#stage#stage .wall-info .total-stat{margin:0!important;padding:0!important;align-items:center;gap:10px;line-height:1.15}
+   #stage#stage#stage#stage#stage#stage#stage#stage#stage .wall-info .ts-num{line-height:1.15}
+   #stage#stage#stage#stage#stage#stage#stage#stage#stage .wall-info .ts-label{line-height:1.15}
    `;
    doc.head.appendChild(css);
    if(doc.fonts)doc.fonts.load('700 32px WallFredoka').then(()=>doc.defaultView.requestAnimationFrame(draw));
@@ -415,14 +429,20 @@ function draw(){
    qrStrip.setAttribute('aria-label','Party QR codes');
    tiles.forEach(({id,label,ink,paper,destination},index)=>{
     const rows=codes[index],side=rows.length+8;
-    const path=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>bit==='1'?'M'+(x+4)+' '+(y+4)+'h1v1h-1z':'')).join('');
+    const branded=id==='cash'||id==='snap';
+    const eyes=[[0,0],[rows.length-7,0],[0,rows.length-7]];
+    const modules=rows.flatMap((row,y)=>Array.from(row,(bit,x)=>{
+     if(bit!=='1'||(!branded&&eyes.some(([ex,ey])=>x>=ex&&x<ex+7&&y>=ey&&y<ey+7)))return '';
+     return '<rect x="'+(x+4)+'" y="'+(y+4)+'" width="1" height="1" rx="'+(branded?0:.16)+'"/>';
+    })).join('');
+    const finders=branded?'':eyes.map(([x,y])=>'<rect x="'+(x+4)+'" y="'+(y+4)+'" width="7" height="7" rx="1.1" fill="#07351f"/><rect x="'+(x+5)+'" y="'+(y+5)+'" width="5" height="5" rx=".55" fill="#fff"/><rect x="'+(x+6)+'" y="'+(y+6)+'" width="3" height="3" rx=".45" fill="#07351f"/>').join('');
     const original=originalLinks[index];
     const link=doc.createElement('a');
     link.className='wall-qr-card wall-qr-card--'+id;
     link.href=destination||original.href;
     link.target='_blank';
     link.rel='noopener noreferrer';
-    link.innerHTML='<span class="wall-qr-face" aria-hidden="true"><svg viewBox="0 0 '+side+' '+side+'" shape-rendering="crispEdges"><rect width="100%" height="100%" fill="'+paper+'"/><path fill="'+ink+'" d="'+path+'"/></svg></span><span>'+label+'</span>';
+    link.innerHTML='<span class="wall-qr-face" aria-hidden="true"><svg viewBox="0 0 '+side+' '+side+'" shape-rendering="geometricPrecision"><rect width="100%" height="100%" fill="'+paper+'"/><g fill="'+ink+'">'+modules+'</g>'+finders+'</svg></span><span class="wall-qr-label">'+label+'</span>';
     if(id==='snap'){
      const fallback=doc.createElement('img');
      fallback.alt='Snapchat QR code';
@@ -457,7 +477,7 @@ function draw(){
    const masthead=doc.createElement('div');
    masthead.className='wall-masthead';
    stageContainer.appendChild(masthead);
-   const host=doc.createElement('strong');host.textContent='Sunny’s Jukebox';
+   const host=doc.createElement('strong');host.setAttribute('aria-label','Sunny’s Jukebox');host.innerHTML='<span>Sunny’s</span><span>Jukebox</span>';
    host.className='wall-host';masthead.appendChild(host);const date=doc.createElement('span');date.className='wall-date';function updateDate(){const now=new Date();date.textContent=now.toLocaleDateString('en-US',{weekday:'short',timeZone:'America/Chicago'}).toUpperCase()+' '+now.toLocaleDateString('en-US',{month:'2-digit',day:'2-digit',timeZone:'America/Chicago'})}updateDate();doc.defaultView.setInterval(updateDate,30000);const info=doc.createElement('div');info.className='wall-info';doc.querySelector('#stage>.container').appendChild(info);info.append(count,date);
 
   }
@@ -526,61 +546,61 @@ function draw(){
    Object.entries({left:x,top:y,width:w,height:h}).forEach(([key,value])=>el.style.setProperty(key,value+'px','important'));
    el.style.transform='none';
   }
-  const counterX=split,mediaTop=rightRoof;
-  const countWidth=(R-counterX)*.58;
-  const countX=roof(counterX)<=roof(R)?counterX:R-countWidth;
-  const countY=Math.max(roof(countX),roof(countX+countWidth))+5;
-  const countHeight=Math.max(12,mediaTop-countY-4);
+  const counterX=split;
   const info=doc.querySelector('.wall-info');
   const count=info.querySelector('.wall-count');
-  // Measure the count at its original dimensions before placing it in the footer.
-  info.parentNode.appendChild(count);
-  box('.wall-count',countX,countY,countWidth,countHeight);
-  count.style.setProperty('padding','0','important');
-  let countSize=Math.min(countHeight*.90,countWidth*.27);
-  count.style.setProperty('--count-size',countSize+'px');
-  while(countSize>8 && (count.scrollWidth>count.clientWidth || count.scrollHeight>count.clientHeight)){
-   count.style.setProperty('--count-size',(--countSize)+'px');
-  }
-  const mediaStart=Math.max(Math.max(roof(counterX),roof(R))+3,countY+countHeight+4);
-  const counterTop=Math.min(roof(counterX),roof(R))+3;
-  info.prepend(count);
+  const titleWidth=R-split;
+  const counterTop=Math.min(roof(split),roof(R))+3;
+  const mediaStart=Math.max(roof(split),roof(R))+Math.max(64,titleWidth*.12);
   const masthead=doc.querySelector('.wall-masthead');
   const host=masthead.firstElementChild;
-  box('.wall-masthead',counterX,counterTop,R-counterX,mediaStart-counterTop);
-  const roofClip='polygon(0 '+Math.max(0,roof(counterX)+3-counterTop)+'px,100% '+Math.max(0,roof(R)+3-counterTop)+'px,100% 100%,0 100%)';
-  masthead.style.clipPath=masthead.style.webkitClipPath=roofClip;
-  masthead.style.setProperty('padding-top',Math.max(0,countY-counterTop)+'px','important');
-  masthead.style.setProperty('padding-bottom',Math.max(0,mediaStart-countY-countHeight)+'px','important');
-  const emptySide=R-counterX-countWidth;
-  masthead.style.setProperty('padding-left',(countX-counterX+6)+'px','important');
-  masthead.style.setProperty('padding-right',(emptySide-(countX-counterX)+6)+'px','important');
-  const titleWidth=countWidth-12;
-  let titleSize=Math.max(8,Math.min(countHeight*.9,titleWidth*.15));
-  host.style.fontSize=titleSize+'px';
-  while(titleSize>8&&host.offsetWidth>titleWidth)host.style.fontSize=(--titleSize)+'px';
-  const infoH=Math.max(20,Math.min(countSize+5,queueW*.055));
-  count.style.setProperty('--count-size',Math.min(countSize,infoH-5)+'px');
+  const titleHeight=mediaStart-counterTop;
+  box('.wall-masthead',split,counterTop,titleWidth,titleHeight);
+  masthead.style.clipPath=masthead.style.webkitClipPath='polygon(0 '+Math.max(0,roof(split)+3-counterTop)+'px,100% '+Math.max(0,roof(R)+3-counterTop)+'px,100% 100%,0 100%)';
+  const lineHeight=Math.min(titleHeight*.42,titleWidth*.16);
+  Array.from(host.children).forEach((line,index)=>{
+   const y=mediaStart-10-lineHeight*(2-index);
+   const slope=(roof(R)-roof(split))/titleWidth;
+   const crossing=split+(y-6-roof(split))/slope;
+   const x=slope>=0?split+12:Math.max(split+12,crossing+12);
+   const right=slope>=0?Math.min(R-12,crossing-12):R-12;
+   const available=Math.max(20,right-x);
+   Object.assign(line.style,{left:(x-split)+'px',top:(y-counterTop)+'px',width:available+'px',height:lineHeight+'px'});
+   let size=lineHeight*.94;
+   line.style.fontSize=size+'px';
+   while(size>8&&line.scrollWidth>line.clientWidth)line.style.fontSize=(--size)+'px';
+  });
+  // Keep the successful QR footprint, with a separate band for readable labels.
+  const formerCountWidth=titleWidth*.58;
+  const formerCountX=roof(split)<=roof(R)?split:R-formerCountWidth;
+  const formerCountY=Math.max(roof(formerCountX),roof(formerCountX+formerCountWidth))+5;
+  const formerCountHeight=Math.max(12,rightRoof-formerCountY-4);
+  const formerInfoH=Math.max(20,Math.min(Math.min(formerCountHeight*.90,formerCountWidth*.27)+5,queueW*.055));
+  const formerQrH=Math.max(1,Math.min(queueW*.30,(base-formerInfoH-queueTop)*.37));
+  const qrCardWidth=(queueW-30)/2;
+  const qrSize=Math.max(1,Math.floor(Math.min(formerQrH-20,qrCardWidth*.74)));
+  const labelSize=Math.max(14,Math.min(qrCardWidth*.105,38));
+  const infoH=Math.max(46,queueW*.075);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
-  const qrHeight=Math.max(1,Math.min(queueW*.30,(base-infoH-queueTop)*.37));
   const footerTop=base-infoH;
+  const qrHeight=qrSize+labelSize*1.28+26;
   const qrTop=footerTop-qrHeight;
   const qrStrip=doc.querySelector('.wall-qr-strip');
   fitLeftPanel('.wall-qr-strip',qrTop,split,qrHeight);
-  const qrCardWidth=(queueW-30)/2;
-  qrStrip.style.setProperty('--qr-size',Math.max(1,Math.floor(Math.min(qrHeight-20,qrCardWidth*.74)))+'px');
-  qrStrip.style.setProperty('--qr-label-size',Math.max(1,Math.min(qrHeight*.11,qrCardWidth*.085))+'px');
-
+  qrStrip.style.setProperty('--qr-size',qrSize+'px');
+  qrStrip.style.setProperty('--qr-label-size',labelSize+'px');
+  count.style.setProperty('--count-size',Math.min(infoH*.59,queueW*.058)+'px');
   const queueH=qrTop-queueTop;
   const cardH=Math.max(80,Math.min((queueH-24)/1.85,queueW*.27));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',Math.max(20,Math.min(queueW*.060,cardH*.26,76))+'px');
   fitLeftPanel('.wall-info',footerTop,split,bottomEdge-footerTop);
-  info.style.paddingBottom=(bottomEdge-base)+'px';
+  info.style.paddingTop='6px';
+  info.style.paddingBottom=(bottomEdge-base+6)+'px';
 
   const date=info.querySelector('.wall-date');
-  let dateSize=Math.max(8,Math.min(queueW*.085,infoH*.72));
+  let dateSize=Math.max(8,Math.min(queueW*.055,infoH*.48));
   date.style.fontSize=dateSize+'px';
   while(dateSize>8&&date.scrollWidth>date.clientWidth+1)date.style.fontSize=(--dateSize)+'px';
   fitLeftPanel('.ticker-section',queueTop,split,queueH);
