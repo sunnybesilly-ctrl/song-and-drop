@@ -541,21 +541,21 @@ function draw(){
   const infoH=Math.min(footerH*.34,queueW*.09);
   const bottomEdge=Math.max(base,rim[3][1],rim[2][1]);
   const qrHeight=Math.max(1,Math.min(span*.18,(base-mediaStart)*.39));
-  const qrTop=base-qrHeight;
-  const footerTop=qrTop-infoH;
+  const footerTop=base-infoH;
+  const qrTop=footerTop-qrHeight;
   const qrStrip=doc.querySelector('.wall-qr-strip');
-  fitLeftPanel('.wall-qr-strip',qrTop,R,bottomEdge-qrTop);
-  qrStrip.style.paddingBottom=(bottomEdge-base+4)+'px';
+  fitLeftPanel('.wall-qr-strip',qrTop,R,qrHeight);
   qrStrip.style.setProperty('--qr-size',Math.floor(Math.min(qrHeight*.72,span*.19))+'px');
   qrStrip.style.setProperty('--qr-label-size',Math.max(1,Math.min(qrHeight*.13,span*.025))+'px');
 
-  const queueH=footerTop-queueTop;
+  const queueH=qrTop-queueTop;
   const cardH=Math.max(80,Math.min((queueH-24)/1.85,queueW*.27));
   const vars=doc.documentElement.style;
   vars.setProperty('--song-height',cardH+'px');
   vars.setProperty('--song-title',Math.max(20,Math.min(queueW*.060,cardH*.26,76))+'px');
-  fitLeftPanel('.wall-info',footerTop,split,infoH);
+  fitLeftPanel('.wall-info',footerTop,split,bottomEdge-footerTop);
   const info=doc.querySelector('.wall-info');
+  info.style.paddingBottom=(bottomEdge-base)+'px';
 
   let size=Math.max(8,Math.min(queueW*.095,infoH*.91));
   do{
@@ -569,7 +569,7 @@ function draw(){
   queuePanel.style.setProperty('padding-left','0','important');
   box('#chatSection',counterX,mediaStart,R-counterX,qrTop-mediaStart);
   const popupTop=Math.max(roof(L),roof(split))+8;
-  fitLeftPanel('#spotlightOverlay',popupTop,split,footerTop-popupTop);
+  fitLeftPanel('#spotlightOverlay',popupTop,split,qrTop-popupTop);
 
  }
  byId('edit').style.left=left+'%';byId('edit').style.top=top+'%';
